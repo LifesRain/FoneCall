@@ -1,0 +1,51 @@
+﻿Role,Arg,Explain
+Shortcut,SHORTCUTS,"In the following list, MOD is the shortcut modifier. By default, it's (left) Alt or (left) Super, but it can be configured by --shortcut-mod (see above)."
+Shortcut,MOD+q,Quit
+Shortcut,MOD+f or F11,Switch fullscreen mode
+Shortcut,MOD+Left,Rotate display left
+Shortcut,MOD+Right,Rotate display right
+Shortcut,MOD+Shift+Left or MOD+Shift+Right,Flip display horizontally
+Shortcut,MOD+Shift+Up or MOD+Shift+Down,Flip display vertically
+Shortcut,MOD+z,Pause or re-pause display
+Shortcut,MOD+Shift+z,Unpause display
+Shortcut,MOD+Shift+r,Reset video capture/encoding
+Shortcut,MOD+g,Resize window to 1:1 (pixel-perfect)
+Shortcut,MOD+w,"Double-click on black borders
+Resize window to remove black borders"
+Shortcut,MOD+h or Middle-click,Click on HOME
+Shortcut,MOD+b or MOD+Backspace,"Right-click (when screen is on)
+Click on BACK"
+Shortcut,MOD+s orr 4th-click,Click on APP_SWITCH
+Shortcut,MOD+m,Click on MENU
+Shortcut,MOD+Up,Click on VOLUME_UP
+Shortcut,MOD+Down,Click on VOLUME_DOWN
+Shortcut,MOD+p,Click on POWER (turn screen on/off)
+Shortcut,Right-click (when screen is off),Power on
+Shortcut,MOD+o,Turn device screen off (keep mirroring)
+Shortcut,MOD+Shift+o,Turn device screen on
+Shortcut,MOD+r,Rotate device screen
+Shortcut,MOD+n or 5th-click,Expand notification panel
+Shortcut,MOD+Shift+n,Collapse notification panel
+Shortcut,MOD+c,"Copy to clipboard (inject COPY keycode, Android >= 7 only)"
+Shortcut,MOD+x,"Cut to clipboard (inject CUT keycode, Android >= 7 only)"
+Shortcut,MOD+v,"Copy computer clipboard to device, then paste (inject PASTE keycode, Android >= 7 only)"
+Shortcut,MOD+Shift+v,Inject computer clipboard text as a sequence of key events
+Shortcut,MOD+k,Open keyboard settings on the device (for HID keyboard only)
+Shortcut,MOD+i,Enable/disable FPS counter (print frames/second in logs)
+Shortcut,Ctrl+click-and-move,Pinch-to-zoom and rotate from the center of the screen
+Shortcut,Shift+click-and-move,Tilt vertically (slide with 2 fingers)
+Shortcut,Ctrl+Shift+click-and-move,Tilt horizontally (slide with 2 fingers)
+Shortcut,Drag & drop APK file,Install APK from computer
+Shortcut,Drag & drop non-APK file,Push file to device (see --push-target)
+Shortcut,MOD+t,Turn on the camera torch (camera mode only)
+Shortcut,MOD+Shift+t,Turn off the camera torch (camera mode only)
+Shortcut,MOD+Up,Zoom camera in (camera mode only)
+Shortcut,MOD+Down,Zoom camera out (camera mode only)
+ENV,ENVIRONMENT VARIABLES,
+ENV,ADB,Path to adb executable
+ENV,ANDROID_SERIAL,"Device serial to use if no selector (-s, -d, -e or --tcpip=<addr>) is specified"
+ENV,SCRCPY_ICON_DIR:,Path to the icon directory
+ENV,SCRCPY_SERVER_PATH:,Path to the server binary
+ENV,Exit status:,"0  Normal program termination
+1  Start failure
+2  Device disconnected while running"

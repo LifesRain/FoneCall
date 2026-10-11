@@ -1,0 +1,32 @@
+Source: "..\source\Libraries\Localization\bin\Release\Localization.resources.dll"; \
+    DestDir: "{app}\MyApp"; Flags: ignoreversion recursesubdirs
+
+FOR VS POST RELEASE BUILD DIRECTIVE
+if $(ConfigurationName)==Release call "E:\FoneCall\FoneCall\__Run_INNO.cmd"
+
+TBX start
+e.g.: D:\scrcpy-win64-v4.1\scrcpy.exe
+e.g.: --always-on-top --window-height 700
+
+D:\Computer\scrcpy-win64-v4.1\scrcpy.exe
+--shortcut-mod lctrl, --always-on-top, --window-height 700~
+ --shortcut-mod lctrl, --alway-top, --windoight 700
+
+"C:\Program Files\Inno Setup 7\ISCC.exe"
+
+-- KVP definition mn
+
+CREATE TABLE 'KVP' ( 
+KVP_key Text DEFAULT FirstRun,
+KVP_valu TEXT DEFAULT True
+);
+
+To get started enter the required Fully Qualified Name of the scrcpy.exe file. Arguments are optional but recommended info and Save to the app DB.
+
+After saving succeeds scrcpy will start using your provided Arguments.
+
+In subsequent usage scrcpy start is delayed for 5 seconds.
+- Double  Clicking FoneCall or pressing F1 will start scrcpy immediately
+- Clicking FoneCall or pressing Enter before the 5 seconds expires prevents scrcpy starting enabling changes the data
+
+@hanspassant

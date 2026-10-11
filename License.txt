@@ -1,0 +1,49 @@
+PolyForm Noncommercial License 1.0.0
+
+Acceptance
+Accepting this license is not required to practice any exception 
+granted by law, such as fair use. However, doing anything with 
+this software that requires permission under copyright law, or 
+any other intellectual property law, other than noncommercial 
+use, constitutes acceptance of this license.
+
+Copyright Grant
+The licensor grants you a copyright license for the software to 
+do everything with the software that would otherwise infringe the 
+licensor's copyright in it, except commercialize the software.
+
+Patent Grant
+The licensor grants you a patent license for the software to 
+make, have made, use, sell, offer for sale, import, and otherwise 
+transfer the software, where that transfer would otherwise infringe 
+the licensor's patents, except to commercialize the software.
+
+Noncommercial
+To commercialize the software means to use or take advantage 
+of it for commercial advantage or private monetary gain. Noncommercial 
+use is any other use.
+
+Distribution
+You may distribute copies of the software, and modifications 
+of the software, as long as you include this license text with 
+every copy.
+
+Notices
+You must ensure that any notice of copyright or other intellectual 
+property rights that the licensor includes with the software is 
+reproduced in every copy or modification you distribute.
+
+Defense
+If you bring a patent lawsuit against the licensor or anyone else 
+claiming that the software infringes a patent, your license ends 
+automatically.
+
+Disclaimer
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.

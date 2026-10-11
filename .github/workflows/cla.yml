@@ -1,0 +1,40 @@
+name: "CLA Assistant"
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened, synchronize, closed]
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  CLAAssistant:
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA' || github.event_name == 'pull_request_target'
+    steps:
+      - name: "CLA Assistant Check"
+        uses: cla-assistant/github-action@v2.5.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path-to-cla-document: 'https://github.com/ddDerelict/CONTRIBUTING/CLA.md'
+          path-to-signatures: '.github/cla-signatures.json'
+          allowlist: bot,greenkeeper[bot],dependabot[bot],ddDerelict
+          
+          # Custom message when a contributor needs to sign
+          custom-pr-sign-comment: |
+            👋 Thank you for contributing to FoneCall, a scrcpy "wrapper"! 
+            
+            Because this project uses a custom non-commercial license, we need all contributors to agree to our Contributor License Agreement (CLA) before we can merge your code. This ensures you keep your rights while allowing us to maintain the project.
+            
+            Please read the [CLA Document]($claDocUrl) and, if you agree, reply to this thread with exactly the following text:
+            
+            > I have read the CLA Document and I hereby sign the CLA
+            
+          # Custom message once they have successfully signed
+          custom-allsigned-pr-comment: |
+            ✅ All contributors have signed the CLA. Thank you! Your pull request is now ready for review.
