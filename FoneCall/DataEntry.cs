@@ -12,7 +12,6 @@ namespace FoneCall
     {
         #region Declare fields
         private static bool _loading { get; set; } = false;
-        private static bool _fqnOK { get; set; } = false;
         private static bool _argsOK { get; set; } = false;
         private static string _fqnAtStart { get; set; }
         private static string _argsAtStart { get; set; }
@@ -21,7 +20,7 @@ namespace FoneCall
         private static ToolTip _cttArgs;
         private static Control _ttCtrl { get; set; }
         //private const string _fqnStart = @"e.g.: D:\scrcpy-win64-v4.1\scrcpy.exe";
-        private const string _argStart = "e.g:  --always-on-top, --window-height 700";
+        private string _argStart { get; set; } = "e.g:  --always-on-top, --window-height 700";
 
         private ICaller _caller { get; set; }
         #endregion
@@ -65,8 +64,7 @@ namespace FoneCall
                                $"exe FQN  = {spec.ScrcpyFQN}\n\t" +
                                $"exe Args = {(spec.Arguments ?? "no arguments; running with defaults")}" );
                     foreach (var tbx in Controls.OfType<TextBox>()) InitTBX( tbx, truInit: false );
-                    CanSave();
-                    if (_fqnOK)
+                    if (CanSave())
                     {
                         LogR.Norm( $"Execution values validated for running scrcpy" );
                         ExeBTN.Text = Xfer.Run;
@@ -158,8 +156,7 @@ namespace FoneCall
                 else ExeBTN.Text = Xfer.Run;
             }
 
-            CanSave();
-            if (_fqnOK) { CstmStyles.BTN_Enabled_Green( ExeBTN ); HideTT(); }
+            if (CanSave()) { CstmStyles.BTN_Enabled_Green( ExeBTN ); HideTT(); }
             else CstmStyles.BTN_Disabled( ExeBTN );
         }
         private void FQN_TBX_Leave( object sender, EventArgs e )
@@ -167,8 +164,7 @@ namespace FoneCall
             if (sender is TextBox tbx)
             {
                 tbx.Text = tbx.Text.Replace( "\"", "" ).Trim();
-                CanSave();
-                if (_fqnOK) CstmStyles.BTN_Enabled_Green( ExeBTN );
+                if (CanSave()) CstmStyles.BTN_Enabled_Green( ExeBTN );
                 else
                 {
                     _ttCtrl = FQN_TBX;
@@ -226,61 +222,17 @@ namespace FoneCall
                         }
                     }
                     else _argsOK = true;
-                    if (_fqnOK && _argsOK) CstmStyles.BTN_Enabled_Default( ExeBTN );
+                    if (CanSave() && _argsOK) CstmStyles.BTN_Enabled_Default( ExeBTN );
                     else CstmStyles.BTN_Disabled( ExeBTN );
                 }
             }
         }
-        private void CanSave()
+        private bool CanSave()
         {
-            // Safely obtain the candidate path from the TextBox.
-            string fqnText;
-            if (FQN_TBX == null)
-            {
-                _fqnOK = false;
-                if (VERIFIED_LBL != null && VERIFIED_LBL.Visible) VERIFIED_LBL.Visible = false;
-                return;
-            }
-
-            try
-            {
-                if (FQN_TBX.IsHandleCreated && FQN_TBX.InvokeRequired)
-                {
-                    fqnText = (string)FQN_TBX.Invoke(new Func<string>(() => FQN_TBX.Text));
-                }
-                else
-                {
-                    // If no handle exists or we're already on the UI thread, read directly.
-                    fqnText = FQN_TBX.Text;
-                }
-            }
-            catch
-            {
-                // Fallback: if cross-thread access fails for any reason, try to read property without invoking.
-                try { fqnText = FQN_TBX.Text; }
-                catch { fqnText = string.Empty; }
-            }
-
-            fqnText = fqnText?.Trim() ?? string.Empty;
+            string fqnText = FQN_TBX.Text?.Trim() ?? string.Empty;
             bool ok = File.Exists(fqnText) && fqnText.Contains("scrcpy.exe");
-            _fqnOK = ok;
-
-            // Update VERIFIED_LBL visibility on UI thread when possible; otherwise set directly.
-            if (VERIFIED_LBL != null)
-            {
-                try
-                {
-                    if (VERIFIED_LBL.IsHandleCreated && VERIFIED_LBL.InvokeRequired)
-                        VERIFIED_LBL.Invoke(new Action(() => VERIFIED_LBL.Visible = ok));
-                    else
-                        VERIFIED_LBL.Visible = ok;
-                }
-                catch
-                {
-                    // best-effort only for unit test scenarios where handles/message loop are not present
-                    try { VERIFIED_LBL.Visible = ok; } catch { /* swallow */ }
-                }
-            }
+            VERIFIED_LBL.Visible = ok;
+            return ok;
         }
         private void UpdateArgs_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {

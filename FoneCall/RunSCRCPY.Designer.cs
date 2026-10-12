@@ -144,12 +144,11 @@
             this.CountDownLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CountDownLBL.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.CountDownLBL.Location = new System.Drawing.Point(22, 85);
-            this.CountDownLBL.MaximumSize = new System.Drawing.Size(328, 0);
             this.CountDownLBL.Name = "CountDownLBL";
-            this.CountDownLBL.Size = new System.Drawing.Size(200, 20);
+            this.CountDownLBL.Size = new System.Drawing.Size(200, 18);
             this.CountDownLBL.TabIndex = 1211;
             this.CountDownLBL.Text = "7 `seconds ...";
-            this.CountDownLBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.CountDownLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MsgTitleLBL
             // 
@@ -157,9 +156,8 @@
             this.MsgTitleLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MsgTitleLBL.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.MsgTitleLBL.Location = new System.Drawing.Point(22, 70);
-            this.MsgTitleLBL.MaximumSize = new System.Drawing.Size(328, 0);
             this.MsgTitleLBL.Name = "MsgTitleLBL";
-            this.MsgTitleLBL.Size = new System.Drawing.Size(200, 15);
+            this.MsgTitleLBL.Size = new System.Drawing.Size(200, 16);
             this.MsgTitleLBL.TabIndex = 1210;
             this.MsgTitleLBL.Text = "Starting scrcpy in";
             this.MsgTitleLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

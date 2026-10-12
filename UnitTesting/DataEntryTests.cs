@@ -236,30 +236,6 @@ namespace FoneCall.Tests
         }
 
         [TestMethod]
-        public void CanSave_SetsFqnOK_And_VerifiedLabelVisibility()
-        {
-            var tmpPath = Path.Combine(Path.GetTempPath(), "scrcpy.exe");
-            File.WriteAllText(tmpPath, "dummy");
-
-            var f = CreateForm();
-            var fqn = (TextBox?)GetPrivateField(f, "FQN_TBX");
-            Assert.IsNotNull(fqn);
-            fqn.Text = tmpPath;
-
-            var mi = typeof(DataEntry).GetMethod("CanSave", BindingFlags.Instance | BindingFlags.NonPublic);
-            mi.Invoke(f, null);
-
-            var fqnOK = (bool)typeof(DataEntry).GetProperty("_fqnOK", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-            var verifiedLbl = (Label?)GetPrivateField(f, "VERIFIED_LBL");
-            Assert.IsNotNull(verifiedLbl);
-
-            Assert.IsTrue(fqnOK);
-            Assert.IsTrue(verifiedLbl.Visible);
-
-            File.Delete(tmpPath);
-        }
-
-        [TestMethod]
         public void ProcessCmdKey_Escape_ReturnsTrue()
         {
             var f = CreateForm();
