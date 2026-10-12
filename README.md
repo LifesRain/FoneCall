@@ -21,7 +21,7 @@ FoneCall will not install if .NET Framework 4.8 or higher is installed. .NET Fra
 > + Windows Server: Windows Server 2019 (starting with version 1903 updates), Windows Server 2022, and Windows Server 2025.
 *(Source: Google search)*
 
-If your OS doesn’t already include support for DNFV 4.8 the installer is available [on this site](https://github.com/ddDerelict/FoneCall/releases) or if you prefer you can [download  from Microsoft]( https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
+If your OS doesn’t already include support for .NET Framework 4.8 the installer is available [on this site](https://github.com/ddDerelict/FoneCall/releases) or if you prefer you can [download  from Microsoft]( https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
 
 FoneCall will install and will start to run but will not proceed to scrcpy execution if scrcpy.exe is not available  If you have arrived here from the official scrcpy project page, you probably already have scrcpy. If you do not have the official scrcpy.exe, it can be downloaded from the [official scrcpy project page](https://github.com/Genymobile/scrcpy).
 
@@ -31,4 +31,4 @@ FoneCall is tested for use exclusively with the official version of scrcpy.
 [Download FoneCall](https://github.com/ddDerelict/FoneCall/releases)
 
 ### Acknowledgements
-scrcpy is an open-source project developed by Genymobile. FoneCall is a third-party application that provides a user-friendly interface for scrcpy. The developers of FoneCall would like to acknowledge the contributions of the scrcpy team and the open-source community for their work on this project.
+scrcpy is a Marvelous open-source project developed by Genymobile. FoneCall is a third-party application that provides a user-friendly interface for scrcpy. The developer of FoneCall would like to acknowledge the contributions of the scrcpy team and the open-source community.
