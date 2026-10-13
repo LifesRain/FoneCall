@@ -340,6 +340,11 @@ namespace FoneCall
                 if (e.Data.Contains( "<http" ))
                 {
                     _initMsg = e.Data.Substring( 0, e.Data.IndexOf( "<http" ) );
+
+                    string ver = _initMsg.Substring( _initMsg.IndexOf( "scrcpy" ) + 7 ).Trim();
+                    var verInDB = DBC.KVP_GetValu<string>( KVP_Keys.Version );
+                    if ( verInDB != ver ) DBC.UpdateKVP( KVP_Keys.Version, ver );
+
                     _initMsg += "executable found";
                     LogR.Norm( $"scrcpy msg: {_initMsg}" );
                     _nuProgMsg = true;

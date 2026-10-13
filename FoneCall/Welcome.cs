@@ -80,7 +80,7 @@ namespace FoneCall
         }
         private void CloseIntroBTN_Click( object sender, EventArgs e )
         {
-            DBC.UpdateKVP( KVP_Keys.FirstRun, false );
+            DBC.UpdateKVP( KVP_Keys.FirstRun, "false" );
             WinCtrl.Call_DataEntry( this );
             Close();
         }

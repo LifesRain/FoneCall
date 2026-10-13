@@ -28,9 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RunOptMngr));
             this.DGV = new System.Windows.Forms.DataGridView();
+            this.rowNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Role = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Arguments = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Explain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SaveBTN = new System.Windows.Forms.Button();
             this.CloseBTN = new System.Windows.Forms.Button();
             this.TextPNL = new System.Windows.Forms.Panel();
@@ -39,10 +43,6 @@
             this.ArgHdrLBL = new System.Windows.Forms.Label();
             this.DGV_PNL = new System.Windows.Forms.Panel();
             this.LoadingLBL = new System.Windows.Forms.Label();
-            this.rowNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Role = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Arguments = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Explain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             this.TextPNL.SuspendLayout();
             this.DGV_PNL.SuspendLayout();
@@ -59,14 +59,46 @@
             this.Explain});
             this.DGV.Location = new System.Drawing.Point(12, 3);
             this.DGV.Name = "DGV";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            this.DGV.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            this.DGV.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DGV.RowTemplate.Height = 18;
             this.DGV.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.DGV.Size = new System.Drawing.Size(450, 150);
             this.DGV.TabIndex = 2;
+            // 
+            // rowNum
+            // 
+            this.rowNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.rowNum.HeaderText = "";
+            this.rowNum.Name = "rowNum";
+            this.rowNum.ReadOnly = true;
+            this.rowNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.rowNum.Width = 30;
+            // 
+            // Role
+            // 
+            this.Role.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Role.HeaderText = "Role";
+            this.Role.Name = "Role";
+            this.Role.ReadOnly = true;
+            this.Role.Width = 54;
+            // 
+            // Arguments
+            // 
+            this.Arguments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Arguments.HeaderText = "Arguments";
+            this.Arguments.MinimumWidth = 100;
+            this.Arguments.Name = "Arguments";
+            // 
+            // Explain
+            // 
+            this.Explain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Explain.HeaderText = "Description";
+            this.Explain.MinimumWidth = 250;
+            this.Explain.Name = "Explain";
+            this.Explain.Width = 250;
             // 
             // SaveBTN
             // 
@@ -110,7 +142,7 @@
             this.TextPNL.Location = new System.Drawing.Point(22, 18);
             this.TextPNL.MaximumSize = new System.Drawing.Size(720, 0);
             this.TextPNL.Name = "TextPNL";
-            this.TextPNL.Size = new System.Drawing.Size(448, 129);
+            this.TextPNL.Size = new System.Drawing.Size(448, 117);
             this.TextPNL.TabIndex = 6;
             // 
             // ReleasesLINK
@@ -120,7 +152,7 @@
             this.ReleasesLINK.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.ReleasesLINK.LinkArea = new System.Windows.Forms.LinkArea(33, 14);
             this.ReleasesLINK.LinkColor = System.Drawing.Color.WhiteSmoke;
-            this.ReleasesLINK.Location = new System.Drawing.Point(65, 108);
+            this.ReleasesLINK.Location = new System.Drawing.Point(65, 96);
             this.ReleasesLINK.Name = "ReleasesLINK";
             this.ReleasesLINK.Size = new System.Drawing.Size(316, 21);
             this.ReleasesLINK.TabIndex = 6;
@@ -135,11 +167,13 @@
             this.InstructLBL.AutoSize = true;
             this.InstructLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InstructLBL.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.InstructLBL.Location = new System.Drawing.Point(24, 51);
+            this.InstructLBL.Location = new System.Drawing.Point(20, 51);
+            this.InstructLBL.MaximumSize = new System.Drawing.Size(443, 0);
             this.InstructLBL.Name = "InstructLBL";
-            this.InstructLBL.Size = new System.Drawing.Size(399, 45);
+            this.InstructLBL.Size = new System.Drawing.Size(406, 30);
             this.InstructLBL.TabIndex = 5;
-            this.InstructLBL.Text = resources.GetString("InstructLBL.Text");
+            this.InstructLBL.Text = "To add Argguments scroll to the bottom of the listing and paste or type the addit" +
+    "ional Arguments starting in the firt empty row";
             // 
             // ArgHdrLBL
             // 
@@ -177,38 +211,6 @@
             this.LoadingLBL.Size = new System.Drawing.Size(229, 35);
             this.LoadingLBL.TabIndex = 8;
             this.LoadingLBL.Text = "LOADING  ARGUMENTS";
-            // 
-            // rowNum
-            // 
-            this.rowNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.rowNum.HeaderText = "";
-            this.rowNum.Name = "rowNum";
-            this.rowNum.ReadOnly = true;
-            this.rowNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rowNum.Width = 30;
-            // 
-            // Role
-            // 
-            this.Role.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Role.HeaderText = "Role";
-            this.Role.Name = "Role";
-            this.Role.ReadOnly = true;
-            this.Role.Width = 54;
-            // 
-            // Arguments
-            // 
-            this.Arguments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Arguments.HeaderText = "Arguments";
-            this.Arguments.MinimumWidth = 100;
-            this.Arguments.Name = "Arguments";
-            // 
-            // Explain
-            // 
-            this.Explain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Explain.HeaderText = "Description";
-            this.Explain.MinimumWidth = 250;
-            this.Explain.Name = "Explain";
-            this.Explain.Width = 250;
             // 
             // RunOptMngr
             // 

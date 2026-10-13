@@ -26,13 +26,25 @@ namespace FoneCall
         // apparently user only has access rights to CommonApplicationData if they & app run as Admin
         static string PD  = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData );
         static string ULD = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+        public static string AppData 
+        {
+            get
+            {
+                if (AppExeFQN.ToLower().Contains("debug")) return Path.Combine( PD, @"FoneCall\" );
+                else return Path.Combine( ULD, @"FoneCall\" );
+            }
+        }
 
-        public static string AppData { get; internal set; } = Path.Combine( PD, @"FoneCall\" );
-
-        // compute these at runtime from AppData so tests can change AppData and have
+        /********  FOR UNIT TESTS 
+        public static string AppData { get; internal set; } = Application.ExecutablePath;
+         /compute these at runtime from AppData so tests can change AppData and have
         // AppDB/AppLog reflect that immediately
         public static string AppDB => Path.Combine( AppData, "FoneCall.db" );
         public static string AppLog => Path.Combine( AppData, "FoneCall.log" );
+        */
+
+        public static string AppDB { get; } = Path.Combine( AppData, "FoneCall.db" );
+        public static string AppLog { get; } = Path.Combine( AppData, "FoneCall.log" );
 
         public static string Help { get; } = @"E:\FoneCall\Data\scrcpy help.txt"; // used in dev to populate DB
     }
@@ -40,7 +52,7 @@ namespace FoneCall
     {
         public const string FirstRun = "FirstRun";
         public const string Intro = "Intro";
-        public const string Prod = "Prod";
+        public const string Version = "Version";
     }
     public static class TBL
     {
@@ -185,7 +197,7 @@ namespace FoneCall
             var t_Valu = OneT_Valu<T>( sql );
             return t_Valu;
         }
-        public static void UpdateKVP( string key, bool state )
+        public static void UpdateKVP( string key, string state )
         {
             string sql = $"UPDATE {TBL.KVP} SET KVP_valu='{state}'" +
                          $" WHERE KVP_key='{key}' ";

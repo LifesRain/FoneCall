@@ -31,7 +31,7 @@ namespace FoneCall
             _logMsgs = new StringBuilder();
             #region logging header
             string filler5 = new string( '=', 5 ),
-                   ver = DBC.GetVer();
+                   ver = DBC.KVP_GetValu<string>( KVP_Keys.Version );
             var netVer = RuntimeInformation.FrameworkDescription;
             LogR.Norm( $"\n\n{filler5} Starting FoneCall {Xfer.RunDate}" +
                        $" || {netVer} {filler5}\n" +

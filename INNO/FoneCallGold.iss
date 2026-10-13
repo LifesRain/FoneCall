@@ -31,10 +31,8 @@ Source: {#releaseFolder}\*; DestDir: "{app}"; Excludes: "*.xml"; Flags: ignoreve
 Source: "license.txt"; DestDir: {app}
 Source: "FoneCall.db"; DestDir: {localappdata}\{#appName}
 Source: "FoneCall.log"; DestDir: {localappdata}\{#appName}
-Source: "sqlite3.exe"; DestDir: {localappdata}\{#appName}
 
 [Run]
-WorkingDir: {localappdata}\{#appName}; Filename: "sqlite3.exe"; Parameters: """FoneCall.db"" ""UPDATE KVP SET KVP_value='True' WHERE KVP_key='Prod'-------"""; Flags: runhidden
 Filename: "{app}\{#appName}.exe"; Description: "Launch application"; Flags: postinstall nowait skipifsilent
 
 [Icons]
@@ -42,6 +40,9 @@ Name: "{group}\{#appName}"; Filename: "{app}\{#appName}.exe"
 Name: "{group}\Uninstall {#appName}"; Filename: "{uninstallexe}"
 
 [Code]
+var
+  SuccessState: Boolean; // Global variable to track if setup reached the final 
+
 function InitializeSetup(): Boolean;
 begin
   // built in function; if required .Net not installed wizard won''t be started
@@ -55,17 +56,28 @@ End;
 
 
 // The most robust way to catch an actual system/extraction failure in Inno Setup
-procedure DeinitializeSetup();
+procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  // If the installer exits without successfully completing the post-install step
-  if (WizardForm.ResultCode <> pdFinished) and (WizardForm.ResultCode <> pdUserCanceled) then
+  // This step is ONLY reached if the actual installation process finishes successfully
+  if CurStep = ssDone then
+  begin
+    SuccessState := True;
+  end;
+end;
+
+procedure DeinitializeSetup();
+var
+  ErrorCode: Integer;
+begin
+  // If SuccessState is false, the user either cancelled or a fatal extraction error occurred
+  if not SuccessState then
   begin
     // Ask the user if they want to report the error
-    if MsgBox('Installation failed. Would you like to open our GitHub Issues page to check for a solution or report this problem?', 
+    if MsgBox('Installation failed to complete. Would you like to open our GitHub Issues page to check for a solution or report this problem?', 
               mbConfirmation, MB_YESNO) = IDYES then
     begin
-      // Replace with your actual GitHub repository URL
-      OpenBrowser('https://github.com/ddDerelict/FoneCall/issues');
+      // ShellExecAsOriginalUser securely launches the link in the user's default browser
+      ShellExecAsOriginalUser('open', 'https://github.com/ddDerelict/FoneCall/issues', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
     end;
   end;
 end;
