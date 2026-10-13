@@ -14,19 +14,18 @@ The tool directly resolves common Windows shortcut limitations:
 ## Core Features & Interface Windows
 
 FoneCall wraps your entire screen-mirroring workflow into a clean graphical workflow:
-*   **Welcome Window:** Disposable entry screen for fast launching.
 <br>
 ![Welcome Window](/assets/images/Intro.png)
-*   **Data Entry Window:** Configuration fields for targeted mobile connection profile.
+<br>
 <br>
 ![Data Entry Window](/assets/images/DataEntry.png)
-*   **scrcpy Execution Window:** process executiion that suppresses command prompt popups.
+<br>
 <br>
 ![scrcpy Execution Window](/assets/images/execution.png)
-
-*   **Options Reference Window:** Interface to manage and save persistent command-line arguments.
+<br>
 <br>
 ![Options Reference and Argument Update Window](/assets/images/ArgRef.png)
+
 ---
 
 ## System Requirements & Prerequisites
