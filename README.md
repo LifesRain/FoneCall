@@ -19,27 +19,19 @@ The tool directly resolves common Windows shortcut limitations:
 FoneCall wraps your entire screen-mirroring workflow into a streamlined graphical workflow. It provides a clean graphical user interface to launch scrcpy with custom arguments directly from your Start Menu or Taskbar while hiding the background command window. 
 
 ### Welcome Window
-Welcome describes tool usage. It is shown the first time FoneCall is launched after installation. The text is included in the  log for future reference.
-<br>
-<br>
+Welcome describes tool usage. It is shown the first time FoneCall is launched after installation. The text is included in the  log for future reference.  
 ![Welcome Window describes tool usage. It is shown the first time FoneCall is launched after installation. The text is included in the  log for future reference.](/assets/images/Intro.png)
 
 ### Data Entry Window
-Data Entry captures execution parameters which are saved in an embedded SQLite DB. The `scrcpy.exe` file location is verified and `Arguments` are validated prior to saving.
-<br>
-<br>
+Data Entry captures execution parameters which are saved in an embedded SQLite DB. The `scrcpy.exe` file location is verified and `Arguments` are validated prior to saving.  
 ![Data Entry captures execution parameters which are saved in an embedded SQLite DB. The scrcpy.exe file location is verified and Arguments are validated prior to saving.](/assets/images/DataEntry.png)
 
 ### zcrcpy Execution Window
-Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.
-<br>
-<br>
+Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.  
 ![Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.](/assets/images/execution.png)
 
 ### scrcpy Options Reference and Argument Update Window
-Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.
-<br>
-<br>
+Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.  
 ![Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.](/assets/images/ArgRef.png)
 
 ---
