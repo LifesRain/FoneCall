@@ -138,7 +138,7 @@
             this.RTBX.Name = "RTBX";
             this.RTBX.ReadOnly = true;
             this.RTBX.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.RTBX.Size = new System.Drawing.Size(365, 283);
+            this.RTBX.Size = new System.Drawing.Size(365, 310);
             this.RTBX.TabIndex = 1207;
             this.RTBX.TabStop = false;
             this.RTBX.Text = "";

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -41,7 +42,8 @@ namespace FoneCall
 
             I_form = this;
             WinCtrl.RegisterWin( this );
-            VerLBL.Text = $"scrcpy {DBC.GetVer()}";
+            VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
+
             AdjustForm();
             InitEventHandlers();
 

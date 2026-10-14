@@ -51,16 +51,17 @@
             this.WinCtrlPNL.Controls.Add(this.CloseWinPB);
             this.WinCtrlPNL.Controls.Add(this.MinWinPB);
             this.WinCtrlPNL.Controls.Add(this.MoveWinPB);
-            this.WinCtrlPNL.Location = new System.Drawing.Point(146, 0);
+            this.WinCtrlPNL.Cursor = System.Windows.Forms.Cursors.AppStarting;
+            this.WinCtrlPNL.Location = new System.Drawing.Point(0, 0);
             this.WinCtrlPNL.Name = "WinCtrlPNL";
-            this.WinCtrlPNL.Size = new System.Drawing.Size(98, 30);
+            this.WinCtrlPNL.Size = new System.Drawing.Size(243, 30);
             this.WinCtrlPNL.TabIndex = 1201;
             // 
             // CloseWinPB
             // 
             this.CloseWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Close;
             this.CloseWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.CloseWinPB.Location = new System.Drawing.Point(58, 7);
+            this.CloseWinPB.Location = new System.Drawing.Point(210, 7);
             this.CloseWinPB.Margin = new System.Windows.Forms.Padding(5);
             this.CloseWinPB.Name = "CloseWinPB";
             this.CloseWinPB.Size = new System.Drawing.Size(18, 20);
@@ -72,7 +73,7 @@
             this.MinWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Minimize;
             this.MinWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MinWinPB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.MinWinPB.Location = new System.Drawing.Point(30, 17);
+            this.MinWinPB.Location = new System.Drawing.Point(184, 17);
             this.MinWinPB.Name = "MinWinPB";
             this.MinWinPB.Size = new System.Drawing.Size(18, 10);
             this.MinWinPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -83,7 +84,7 @@
             // 
             this.MoveWinPB.BackgroundImage = global::FoneCall.Properties.Resources.moveWin;
             this.MoveWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.MoveWinPB.Location = new System.Drawing.Point(1, 7);
+            this.MoveWinPB.Location = new System.Drawing.Point(147, 7);
             this.MoveWinPB.Name = "MoveWinPB";
             this.MoveWinPB.Size = new System.Drawing.Size(20, 20);
             this.MoveWinPB.TabIndex = 1199;

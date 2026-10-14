@@ -8,7 +8,9 @@ using System.Windows.Forms;
 namespace FoneCall
 {
     // Ensure FoneCallUI inherits from System.Windows.Forms.Form
+
     public partial class Welcome : MsgBoxImplement
+
     {
 
         public Welcome()
@@ -16,7 +18,7 @@ namespace FoneCall
             InitializeComponent();
 
             this.FormBorderStyle = FormBorderStyle.None;
-            VerLBL.Text = $"scrcpy {DBC.GetVer()}";
+            VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
             LogLBL.Text = Path.GetDirectoryName( Paths.AppLog );
 
             PopulateRTBX();

@@ -42,7 +42,7 @@ namespace FoneCall
 
             this.FormBorderStyle = FormBorderStyle.None;
             I_form = this;
-            VerLBL.Text = $"scrcpy {DBC.GetVer()}";
+            VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
             WinCtrl.RegisterWin( this );
 
             InitEventHandlers();
@@ -109,9 +109,9 @@ namespace FoneCall
             if (!_delayTimerRunning) return; // safety check
 
             _elapsed += _delayTimer.Interval;
-            if (_elapsed < 10000 && !_noDelay)
+            if (_elapsed < 7000 && !_noDelay)
             {
-                CountDownLBL.Text = $"{10 - (_elapsed / 1000)} seconds...";
+                CountDownLBL.Text = $"{7 - (_elapsed / 1000)} seconds...";
             }
             else ProgMsgSetup();
         }

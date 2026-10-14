@@ -1,30 +1,46 @@
 # FoneCall — Windows GUI for scrcpy (Android Screen Mirroring)
 
-FoneCall is a simple, lightweight **scrcpy UI** designed for Windows. It provides a clean graphical user interface to launch scrcpy with custom arguments directly from your Start Menu or Taskbar while hiding the background command window. It serves as a standard native Windows desktop application alternative to the default ".vbs" script file distributed with scrcpy.
+FoneCall is a simple, lightweight **scrcpy UI** designed for Windows. It serves as a standard native Windows desktop application alternative to the default `.vbs` script file distributed with scrcpy.
+
+The tool overcomes scrcpy constraints:
+*   **Command Window Launch:** Command window must stay active or scrcpy exits.
+*   **Delayed Launch Confirmation:** There is a significant delay between `.vbs` execution initiation and display of the mirrored phone screen on the computer screen.
 
 The tool directly resolves common Windows shortcut limitations:
 *   **Taskbar Pinning:** Pinning `scrcpy.exe` natively opens an unwanted Windows command prompt window and cannot accommodate custom arguments.
 *   **VBS Constraints:** Pinning the default `.vbs` script directly to the Start Menu or Taskbar is natively blocked by Windows.
 *   **Shortcut Issues:** Pinning manual Windows shortcuts targeting a `.vbs` source file is increasingly problematic in modern Windows builds.
-
-
 	
 ---
 
+
 ## Core Features & Interface Windows
 
-FoneCall wraps your entire screen-mirroring workflow into a clean graphical workflow:
-<br>
-![Welcome Window](/assets/images/Intro.png)
-<br>
-<br>
-![Data Entry Window](/assets/images/DataEntry.png)
+FoneCall wraps your entire screen-mirroring workflow into a streamlined graphical workflow. It provides a clean graphical user interface to launch scrcpy with custom arguments directly from your Start Menu or Taskbar while hiding the background command window. 
+
+### Welcome Window
+Welcome describes tool usage. It is shown the first time FoneCall is launched after installation. The text is included in the  log for future reference.
 <br>
 <br>
-![scrcpy Execution Window](/assets/images/execution.png)
+![Welcome Window describes tool usage. It is shown the first time FoneCall is launched after installation. The text is included in the  log for future reference.](/assets/images/Intro.png)
+
+### Data Entry Window
+Data Entry captures execution parameters which are saved in an embedded SQLite DB. The `scrcpy.exe` file location is verified and `Arguments` are validated prior to saving.
 <br>
 <br>
-![Options Reference and Argument Update Window](/assets/images/ArgRef.png)
+![Data Entry captures execution parameters which are saved in an embedded SQLite DB. The scrcpy.exe file location is verified and Arguments are validated prior to saving.](/assets/images/DataEntry.png)
+
+### zcrcpy Execution Window
+Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.
+<br>
+<br>
+![Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.](/assets/images/execution.png)
+
+### scrcpy Options Reference and Argument Update Window
+Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.
+<br>
+<br>
+![Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.](/assets/images/ArgRef.png)
 
 ---
 

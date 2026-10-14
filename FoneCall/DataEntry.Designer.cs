@@ -30,10 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataEntry));
             this.ExeBTN = new System.Windows.Forms.Button();
-            this.WinCtrlPNL = new System.Windows.Forms.Panel();
-            this.CloseWinPB = new System.Windows.Forms.PictureBox();
-            this.MinWinPB = new System.Windows.Forms.PictureBox();
-            this.MoveWinPB = new System.Windows.Forms.PictureBox();
             this.VerLBL = new System.Windows.Forms.Label();
             this.VERIFIED_LBL = new System.Windows.Forms.Label();
             this.UpdateArgsLINK = new System.Windows.Forms.LinkLabel();
@@ -41,6 +37,10 @@
             this.FQNhdrLBL = new System.Windows.Forms.Label();
             this.ArgsTBX = new System.Windows.Forms.TextBox();
             this.FQN_TBX = new System.Windows.Forms.TextBox();
+            this.WinCtrlPNL = new System.Windows.Forms.Panel();
+            this.CloseWinPB = new System.Windows.Forms.PictureBox();
+            this.MinWinPB = new System.Windows.Forms.PictureBox();
+            this.MoveWinPB = new System.Windows.Forms.PictureBox();
             this.WinCtrlPNL.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CloseWinPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinWinPB)).BeginInit();
@@ -62,50 +62,6 @@
             this.ExeBTN.TabIndex = 3;
             this.ExeBTN.Text = "Save to DB";
             this.ExeBTN.UseVisualStyleBackColor = false;
-            // 
-            // WinCtrlPNL
-            // 
-            this.WinCtrlPNL.BackColor = System.Drawing.Color.Transparent;
-            this.WinCtrlPNL.Controls.Add(this.CloseWinPB);
-            this.WinCtrlPNL.Controls.Add(this.MinWinPB);
-            this.WinCtrlPNL.Controls.Add(this.MoveWinPB);
-            this.WinCtrlPNL.Location = new System.Drawing.Point(259, 0);
-            this.WinCtrlPNL.Name = "WinCtrlPNL";
-            this.WinCtrlPNL.Size = new System.Drawing.Size(98, 30);
-            this.WinCtrlPNL.TabIndex = 1203;
-            // 
-            // CloseWinPB
-            // 
-            this.CloseWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Close;
-            this.CloseWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.CloseWinPB.Location = new System.Drawing.Point(58, 7);
-            this.CloseWinPB.Margin = new System.Windows.Forms.Padding(5);
-            this.CloseWinPB.Name = "CloseWinPB";
-            this.CloseWinPB.Size = new System.Drawing.Size(18, 20);
-            this.CloseWinPB.TabIndex = 1201;
-            this.CloseWinPB.TabStop = false;
-            // 
-            // MinWinPB
-            // 
-            this.MinWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Minimize;
-            this.MinWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.MinWinPB.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.MinWinPB.Location = new System.Drawing.Point(30, 17);
-            this.MinWinPB.Name = "MinWinPB";
-            this.MinWinPB.Size = new System.Drawing.Size(18, 10);
-            this.MinWinPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.MinWinPB.TabIndex = 1200;
-            this.MinWinPB.TabStop = false;
-            // 
-            // MoveWinPB
-            // 
-            this.MoveWinPB.BackgroundImage = global::FoneCall.Properties.Resources.moveWin;
-            this.MoveWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.MoveWinPB.Location = new System.Drawing.Point(1, 7);
-            this.MoveWinPB.Name = "MoveWinPB";
-            this.MoveWinPB.Size = new System.Drawing.Size(20, 20);
-            this.MoveWinPB.TabIndex = 1199;
-            this.MoveWinPB.TabStop = false;
             // 
             // VerLBL
             // 
@@ -134,16 +90,16 @@
             // UpdateArgsLINK
             // 
             this.UpdateArgsLINK.AutoSize = true;
-            this.UpdateArgsLINK.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateArgsLINK.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdateArgsLINK.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.UpdateArgsLINK.LinkArea = new System.Windows.Forms.LinkArea(0, 17);
+            this.UpdateArgsLINK.LinkArea = new System.Windows.Forms.LinkArea(0, 25);
             this.UpdateArgsLINK.LinkColor = System.Drawing.Color.WhiteSmoke;
-            this.UpdateArgsLINK.Location = new System.Drawing.Point(16, 161);
+            this.UpdateArgsLINK.Location = new System.Drawing.Point(16, 163);
             this.UpdateArgsLINK.Name = "UpdateArgsLINK";
-            this.UpdateArgsLINK.Size = new System.Drawing.Size(109, 13);
+            this.UpdateArgsLINK.Size = new System.Drawing.Size(160, 15);
             this.UpdateArgsLINK.TabIndex = 4;
             this.UpdateArgsLINK.TabStop = true;
-            this.UpdateArgsLINK.Text = "Add New Arguments";
+            this.UpdateArgsLINK.Text = "View && Add New Arguments";
             this.UpdateArgsLINK.VisitedLinkColor = System.Drawing.Color.WhiteSmoke;
             // 
             // ArgHdrLBL
@@ -154,10 +110,11 @@
             this.ArgHdrLBL.Location = new System.Drawing.Point(16, 109);
             this.ArgHdrLBL.MaximumSize = new System.Drawing.Size(328, 0);
             this.ArgHdrLBL.Name = "ArgHdrLBL";
-            this.ArgHdrLBL.Size = new System.Drawing.Size(249, 30);
+            this.ArgHdrLBL.Size = new System.Drawing.Size(317, 30);
             this.ArgHdrLBL.TabIndex = 1208;
-            this.ArgHdrLBL.Text = "scrcpy command line Arguments (Optional)\r\nSeperate MULTIPLE arguments with a comm" +
-    "a\r\n";
+            this.ArgHdrLBL.Text = "scrcpy command line Arguments (Optional).  Seperate multiple arguments with a com" +
+    "ma to have them validated.\r\n";
+            this.ArgHdrLBL.UseWaitCursor = true;
             // 
             // FQNhdrLBL
             // 
@@ -194,12 +151,57 @@
             this.FQN_TBX.TabStop = false;
             this.FQN_TBX.Text = "e.g.: D:\\scrcpy-win64-v4.1\\scrcpy.exe";
             // 
+            // WinCtrlPNL
+            // 
+            this.WinCtrlPNL.BackColor = System.Drawing.Color.Transparent;
+            this.WinCtrlPNL.Controls.Add(this.CloseWinPB);
+            this.WinCtrlPNL.Controls.Add(this.MinWinPB);
+            this.WinCtrlPNL.Controls.Add(this.MoveWinPB);
+            this.WinCtrlPNL.Location = new System.Drawing.Point(258, 0);
+            this.WinCtrlPNL.Name = "WinCtrlPNL";
+            this.WinCtrlPNL.Size = new System.Drawing.Size(98, 30);
+            this.WinCtrlPNL.TabIndex = 1211;
+            // 
+            // CloseWinPB
+            // 
+            this.CloseWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Close;
+            this.CloseWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CloseWinPB.Location = new System.Drawing.Point(58, 7);
+            this.CloseWinPB.Margin = new System.Windows.Forms.Padding(5);
+            this.CloseWinPB.Name = "CloseWinPB";
+            this.CloseWinPB.Size = new System.Drawing.Size(18, 20);
+            this.CloseWinPB.TabIndex = 1201;
+            this.CloseWinPB.TabStop = false;
+            // 
+            // MinWinPB
+            // 
+            this.MinWinPB.BackgroundImage = global::FoneCall.Properties.Resources.Minimize;
+            this.MinWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MinWinPB.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MinWinPB.Location = new System.Drawing.Point(32, 17);
+            this.MinWinPB.Name = "MinWinPB";
+            this.MinWinPB.Size = new System.Drawing.Size(18, 10);
+            this.MinWinPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.MinWinPB.TabIndex = 1200;
+            this.MinWinPB.TabStop = false;
+            // 
+            // MoveWinPB
+            // 
+            this.MoveWinPB.BackgroundImage = global::FoneCall.Properties.Resources.moveWin;
+            this.MoveWinPB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MoveWinPB.Location = new System.Drawing.Point(1, 7);
+            this.MoveWinPB.Name = "MoveWinPB";
+            this.MoveWinPB.Size = new System.Drawing.Size(20, 20);
+            this.MoveWinPB.TabIndex = 1199;
+            this.MoveWinPB.TabStop = false;
+            // 
             // DataEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(87)))), ((int)(((byte)(79)))));
             this.ClientSize = new System.Drawing.Size(359, 231);
+            this.Controls.Add(this.WinCtrlPNL);
             this.Controls.Add(this.VERIFIED_LBL);
             this.Controls.Add(this.UpdateArgsLINK);
             this.Controls.Add(this.ArgHdrLBL);
@@ -207,7 +209,6 @@
             this.Controls.Add(this.ArgsTBX);
             this.Controls.Add(this.FQN_TBX);
             this.Controls.Add(this.VerLBL);
-            this.Controls.Add(this.WinCtrlPNL);
             this.Controls.Add(this.ExeBTN);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DataEntry";
@@ -225,10 +226,6 @@
 
         #endregion
         private System.Windows.Forms.Button ExeBTN;
-        private System.Windows.Forms.Panel WinCtrlPNL;
-        private System.Windows.Forms.PictureBox CloseWinPB;
-        private System.Windows.Forms.PictureBox MinWinPB;
-        private System.Windows.Forms.PictureBox MoveWinPB;
         private System.Windows.Forms.Label VerLBL;
         private System.Windows.Forms.Label VERIFIED_LBL;
         private System.Windows.Forms.LinkLabel UpdateArgsLINK;
@@ -236,5 +233,9 @@
         private System.Windows.Forms.Label FQNhdrLBL;
         private System.Windows.Forms.TextBox ArgsTBX;
         private System.Windows.Forms.TextBox FQN_TBX;
+        private System.Windows.Forms.Panel WinCtrlPNL;
+        private System.Windows.Forms.PictureBox CloseWinPB;
+        private System.Windows.Forms.PictureBox MinWinPB;
+        private System.Windows.Forms.PictureBox MoveWinPB;
     }
 }
