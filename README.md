@@ -64,6 +64,7 @@ FoneCall is a native Windows desktop application built to bridge the gap between
 ---
 
 ## Download and Installation
+Installing FnseCall does not require Administrator privileges. The installation package is a standard Windows installer executable that can be run from any user account. Because FoneCall connects with an individual's smartphone via scrcpy FoneCall is installed in one user's AppData\Local\Programs directory. The DB and log files are stored in the user's AppData\Local\FoneCall directory. The installation process is fast, straightforward and does not require any special configuration.
 
 ### 1. Download FoneCall
 Get the latest installation package directly from our repository

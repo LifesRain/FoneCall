@@ -266,7 +266,11 @@ namespace FoneCall
 
             DBC.SaveExeSpec( t );
 
-            if (DBC.GetExeSpec() != null) WinCtrl.Call_RunSCRCPY( this, noDelay: true );
+            if (DBC.GetExeSpec() != null)
+            {
+                DBC.UpdateKVP( KVP_Keys.FirstRun, "false" );
+                WinCtrl.Call_RunSCRCPY( this, noDelay: true );
+            }
             else
             {
                 #region msgBox Params

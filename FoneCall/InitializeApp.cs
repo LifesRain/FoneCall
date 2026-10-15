@@ -44,7 +44,7 @@ namespace FoneCall
             await RunChecks( startHeader: true );
             LogR.Norm( _logMsgs.ToString() );
 
-            DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
+            //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
             //DBC.ClearExeSpec(); // for testing
 
             #region logging start state

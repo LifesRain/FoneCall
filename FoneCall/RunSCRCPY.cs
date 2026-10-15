@@ -179,6 +179,7 @@ namespace FoneCall
             MsgLBL.Font = CstmStyles.Std_9_R;
             MsgLBL.Height = 48;
             MsgLBL.Location = new Point( MsgLBL.Left, 73 );
+            MsgLBL.Text = "Connecting with scrcpy.exe";
 
             WinCtrlPNL.Visible = false;
             Application.DoEvents();
