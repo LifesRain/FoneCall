@@ -16,7 +16,7 @@ The tool directly resolves common Windows shortcut limitations:
 
 ## Core Features & Interface Windows
 
-FoneCall wraps your entire screen-mirroring workflow into a streamlined graphical workflow. It provides a clean graphical user interface to launch scrcpy with execution arguments directly from your Start Menu or Taskbar while hiding the background command window. During execution, FoneCall dislays an logs scrcpy startup status.
+FoneCall wraps your entire screen-mirroring workflow into a streamlined graphical workflow. It provides a clean graphical user interface to launch scrcpy with execution arguments directly from your Start Menu or Taskbar while hiding the background command window. During execution, FoneCall displays and logs scrcpy startup status.
 
 The tool is designed to be intuitive and user-friendly, making it easy for users to configure and launch scrcpy without needing to interact with command-line interfaces. When your phone's screen is displayed on your computer, FoneCall automatically exits, leaving only the mirrored phone screen visible and active.
 
@@ -29,12 +29,12 @@ Data Entry captures execution parameters which are saved in an embedded SQLite d
 ![Data Entry captures execution parameters which are saved in an embedded SQLite DB. The scrcpy.exe file location is verified and Arguments are validated prior to saving.](/assets/images/DataEntry.png)
 
 ### zcrcpy Execution Window
-Execution starts scrcpy and provides & logs execution status. In the initial launch of FoneCall after installation Execution is triggered by successfully saving the execution parameters to the DB. In subsequent launches Execution is the initial window if valid execution parameters are in the DB.  If the parameters are missing or invalid, the user is returned to the Data Entry window to correct the issue.
+Execution starts scrcpy and displays & logs execution status. In the initial launch of FoneCall after installation Execution is triggered by successfully saving the execution parameters to the DB. In subsequent launches Execution is the initial window if valid execution parameters are in the DB.  If the parameters are missing or invalid, the user is returned to the *`Data Entry`* window to correct the issue.
 
 There is a seven second delay between the launch of FoneCall and the start of scrcpy. During the delay, the user can:
-*   start  scrcpy immediately by pressing the F1 key.
-*   pause the countdown by moving the  mouse cursor near the top of the FoneCall window.
-*   cancel the execution and switch to *`Data Entry`* by clicking FoneCall or pressing the Enter key.
+*   start  scrcpy immediately
+*   pause the countdown
+*   cancel the execution and switch to *`Data Entry`*
 
 When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the *`Data Entry`* window to correct the issue.  
 ![Execution starts scrcpy and provides & logs execution status. This is the initial window after execution parameters have been saved When the phone is displayed on the computer screen FoneCall exits.  If an error occurs, the user is returned to the Data Entry window to correct the issue.](/assets/images/execution.png)
