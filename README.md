@@ -1,4 +1,4 @@
-# FoneCall — Windows GUI for scrcpy (Android Screen Mirroring)
+s# FoneCall — Windows GUI for scrcpy (Android Screen Mirroring)
 
 FoneCall is a simple, lightweight **scrcpy UI**. It is a standard native Windows desktop application. Functionally it provides an alternative to the `.vbs` script file distributed with scrcpy.
 
@@ -28,7 +28,7 @@ Welcome describes tool usage. It is only shown the first time FoneCall is launch
 Data Entry captures execution parameters which are saved in an embedded SQLite database (DB). The `scrcpy.exe` file location is verified and `Arguments` are validated prior to saving.  
 ![Data Entry captures execution parameters which are saved in an embedded SQLite DB. The scrcpy.exe file location is verified and Arguments are validated prior to saving.](/assets/images/DataEntry.png)
 
-### zcrcpy Execution Window
+### scrcpy Execution Window
 Execution starts scrcpy and displays & logs execution status. In the initial launch of FoneCall after installation Execution is triggered by successfully saving the execution parameters to the DB. In subsequent launches Execution is the initial window if valid execution parameters are in the DB.  If the parameters are missing or invalid, the user is returned to the *`Data Entry`* window to correct the issue.
 
 There is a seven second delay between the launch of FoneCall and the start of scrcpy. During the delay, the user can:
