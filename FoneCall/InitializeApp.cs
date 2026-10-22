@@ -29,19 +29,20 @@ namespace FoneCall
             /// n.b..I believe problem could be solved with SuspendLayout() see RunOptMngr
 
             _logMsgs = new StringBuilder();
+            await RunChecks( startHeader: true );
             #region logging header
             string filler5 = new string( '=', 5 ),
                    ver = DBC.KVP_GetValu<string>( KVP_Keys.Version );
             var netVer = RuntimeInformation.FrameworkDescription;
             LogR.Norm( $"\n\n{filler5} Starting FoneCall {Xfer.RunDate}" +
                        $" || {netVer} {filler5}\n" +
+                       $"WRK DIR {Directory.GetCurrentDirectory()}\n" +
                        $"EXE DIR {Paths.AppExeFQN}\n" +
                        $"DB File {Paths.AppDB}\n" +
                        $"Logging {Paths.AppLog}\n" +
                        $"scrcpy {ver} || SQLite v{DBC.GetSQLiteVersion()}" );
             #endregion
 
-            await RunChecks( startHeader: true );
             LogR.Norm( _logMsgs.ToString() );
 
             //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
@@ -174,9 +175,13 @@ namespace FoneCall
                 #region Perform Startup checks
                 if (Directory.Exists( Paths.AppData ))
                 {
-                    bool dbOK = await DBC.CheckDB();
-                    _logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
-                    if (!dbOK) callMsgBx( noLog: false, noDataDir: false, notCatch: true, ex: null );
+                    if (File.Exists( Paths.AppDB ))
+                    {
+                        bool dbOK = await DBC.CheckDB();
+                        _logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
+                        if (!dbOK) callMsgBx( noLog: false, noDataDir: false, notCatch: true, ex: null );
+                    }
+                    else callMsgBx( noLog: false, noDataDir: true, notCatch: true, ex: null );
                 }
                 else callMsgBx( noLog: false, noDataDir: true, notCatch: true, ex: null );
                 #endregion
