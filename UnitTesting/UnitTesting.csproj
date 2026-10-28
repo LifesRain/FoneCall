@@ -10,6 +10,7 @@
     <!-- Ensure automatic binding redirects for .NET Framework test host -->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <Configurations>Debug;Release;Release_Portable</Configurations>
   </PropertyGroup>
 
 	<PropertyGroup>

@@ -15,15 +15,20 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release_Portable|Any CPU = Release_Portable|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Release_Portable|Any CPU.ActiveCfg = Release_Portable|Any CPU
+		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Release_Portable|Any CPU.Build.0 = Release_Portable|Any CPU
 		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A938102-4358-404A-A0BE-65AD65FACEAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Release_Portable|Any CPU.ActiveCfg = Release_Portable|Any CPU
+		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Release_Portable|Any CPU.Build.0 = Release_Portable|Any CPU
 		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15618CBC-BA4A-45B0-8520-EBFC31F07F8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
