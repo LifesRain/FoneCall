@@ -1,4 +1,4 @@
-﻿ Downloadable Options
+﻿Downloadable Options
 
 |File|Description|
 |----|----|
@@ -21,16 +21,14 @@ FoneCall features a fully transparent development process with a public codebase
 
     When you use the default Windows File Explorer to extract a ZIP file, it automatically propagates an internet tracking tag—called *Mark of the Web* (MotW)—to every single file inside the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
 
-*   ***The Solution:*** To avoid the unnecessary warnin use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
+*   ***The Solution:*** To avoid the unnecessary warning use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
 
     Using third-party tools like 7-Zip or WinRAR safely typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
 > [!IMPORTANT]
 > **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip.
 
-#### If you still see the Windows SmartSscreen warning, follow these steps to bypass it:
+#### If you still see the Windows SmartScreen warning, follow these steps to bypass it:
+![Instructions for Negotiating SmartScreen.](https://github.com/LifesRain/FoneCall/blob/master/assets/images/SmartScreenIntruct.png?raw=true)
 
- ![Screen shots of Windows Defender SmartScreen.](/assets/images/WinSS.png)
- 
- *Note: Because our installer is configured for "User-Mode", it will install cleanly into your user directory without requiring an administrative password.*|
 
