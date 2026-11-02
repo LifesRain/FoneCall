@@ -4,14 +4,15 @@
     - name: Build Portable Binary Payload
       run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="bin\Release\Portable"
 
-    - name: Download GPLv3 License Text (Mirroring Batch File)
+    - name: Stage Local Polyform License File
       run: |
-        # Download license to both outputs so both packages include it
+        # Ensure directories exist
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Installer" -Force
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Portable" -Force
         
-        Invoke-WebRequest -Uri 'https://gnu.org' -OutFile 'FoneCall/bin/Release/Installer/LICENSE.txt' -UseBasicParsing
-        Invoke-WebRequest -Uri 'https://gnu.org' -OutFile 'FoneCall/bin/Release/Portable/LICENSE.txt' -UseBasicParsing
+        # Copy your local Polyform LICENSE.md file into both output locations
+        Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Installer/LICENSE.md" -Force
+        Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Portable/LICENSE.md" -Force
       shell: powershell
 
     - name: Download Microsoft .NET 4.8.1 Runtime Web Installer
@@ -22,7 +23,6 @@
     - name: Compile Inno Setup Installer via ISCC
       run: |
         cd INNO
-        # Points Inno Setup specifically to the newly separated Installer binary folder
         ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
       shell: cmd
 
@@ -53,31 +53,19 @@
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option4/"
 
-        # Compress into your 4 precise zip naming outputs
+        # Compress into your 4 zip outputs
         Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/FoneCall_Setup.zip" -Force
         Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/FoneCall_Setup+NDP481-Web.zip" -Force
         Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/FoneCall_Portable.zip" -Force
         Compress-Archive -Path "dist/Option4/*" -DestinationPath "INNO/Output/FoneCall_Portable+NDP481-Web.zip" -Force
       shell: powershell
 
-      name: Publish All 4 Formats to GitHub Release
+    - name: Publish All 4 Formats to GitHub Draft Release
       uses: softprops/action-gh-release@v2
       with:
+        draft: true  
         generate_release_notes: true
-
-    - name: Publish All 4 Formats to GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        body_path: INNO/Readme.txt  # <-- SUCKS TEXT DIRECTLY FROM YOUR FILE
-        files: |
-          INNO/Output/FoneCall_Setup.zip
-          INNO/Output/FoneCall_Setup+NDP481-Web.zip
-          INNO/Output/FoneCall_Portable.zip
-          INNO/Output/FoneCall_Portable+NDP481-Web.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
+        body_path: INNO/ReleaseREADME.md  # <--- UPDATED SCRIPT PATH TARGET
         body: |
           ## ⚠️ Windows SmartScreen Notice
           Because FoneCall is open-source and distributed without an expensive corporate signing certificate, Windows Defender SmartScreen may show a warning when running the installer. 
@@ -91,8 +79,6 @@
           4. **FoneCall_Portable+NDP481-Web.zip** - Portable folder structure bundled with the Microsoft runtime.
           
           ---
-          
-          ### 🛠️ What's Changed in This Release
         files: |
           INNO/Output/FoneCall_Setup.zip
           INNO/Output/FoneCall_Setup+NDP481-Web.zip

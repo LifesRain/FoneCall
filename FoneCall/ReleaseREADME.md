@@ -1,4 +1,4 @@
-﻿Downloadable Options
+﻿ Downloadable Options
 
 |File|Description|
 |----|----|
@@ -15,26 +15,22 @@
 Browsers, email clients and antivirus scanners frequently block direct downloads of .exe installers or flag them with aggressive SmartScreen warnings. Packaging the installer inside a `.ZIP archive` ensures you can download it safely.
 
 #### SmartScreen Considerations
-FoneCall is open-source and distributed without expensive public certificates. Without intervention on your part Windows Defender SmartScreen (Windows SS) will display a warning stating "Windows protected your PC" upon launching the installer. The warning can be quite valid if the installer source is truly "unknown". However, if the source is known and trusted the warning is unnecessary, irritating and insulting. 
+FoneCall features a fully transparent development process with a public codebase repository. To keep the project free, it is distributed without an expensive commercial code-signing certificate. Because of this, Windows Defender SmartScreen will display a standard "Windows protected your PC" warning when you launch the installer. While this warning is a helpful security feature for truly unknown files, it is a false alarm here since the source is trusted.
 
 *   ***The Root Cause:*** Windows SS makes no distinction between truly well known sources—such as GitHub—and other sources. 
 
     When you use the default Windows File Explorer to extract a ZIP file, it automatically propagates an internet tracking tag—called *Mark of the Web* (MotW)—to every single file inside the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
 
-*   ***The Solution:*** The unnecessary warning can be avoided by using `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer from the zip file. (`7-Zip` is preferred by the author.)
+*   ***The Solution:*** To avoid the unnecessary warnin use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
 
     Using third-party tools like 7-Zip or WinRAR safely typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
 > [!IMPORTANT]
-> **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. Avoid Windows built-in unzip.
+> **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip.
 
-#### If you still se the Windows SS
+#### If you still see the Windows SmartSscreen warning, follow these steps to bypass it:
 
-|What You Will See|What To Do|
-|----|----|
-| ![Screen shots of Windows Defender SmartScreen.](/assets/images/WinSS.png)|1. On the blue SmartScreen window, click the small **"More info"** hyperlink.|
-
-
-2. Click the **"Run anyway"** button that appears at the bottom.
-*Note: Because our installer is configured for "User-Mode", it will install cleanly into your user directory without requiring an administrative password.*|
+ ![Screen shots of Windows Defender SmartScreen.](/assets/images/WinSS.png)
+ 
+ *Note: Because our installer is configured for "User-Mode", it will install cleanly into your user directory without requiring an administrative password.*|
 
