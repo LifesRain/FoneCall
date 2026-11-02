@@ -6,11 +6,8 @@
 
     - name: Stage Local Polyform License File
       run: |
-        # Ensure directories exist
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Installer" -Force
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Portable" -Force
-        
-        # Copy your local Polyform LICENSE.md file into both output locations
         Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Installer/LICENSE.md" -Force
         Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Portable/LICENSE.md" -Force
       shell: powershell
@@ -28,32 +25,25 @@
 
     - name: Assemble Packaging Matrix
       run: |
-        # Setup clean staging paths
         New-Item -ItemType Directory -Path "dist/Option1" -Force
         New-Item -ItemType Directory -Path "dist/Option2" -Force
         New-Item -ItemType Directory -Path "dist/Option3" -Force
         New-Item -ItemType Directory -Path "dist/Option4" -Force
 
-        # Option 1: Just the installer
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option1/"
 
-        # Option 2: Installer + Runtime
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option2/"
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option2/"
 
-        # Option 3: Portable Binaries 
-        # Grabs the specific Portable compilation folder AND injects the db/log from INNO
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option3/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
 
-        # Option 4: Portable Binaries + Runtime
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option4/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option4/"
 
-        # Compress into your 4 zip outputs
         Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/FoneCall_Setup.zip" -Force
         Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/FoneCall_Setup+NDP481-Web.zip" -Force
         Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/FoneCall_Portable.zip" -Force
@@ -65,7 +55,7 @@
       with:
         draft: true  
         generate_release_notes: true
-        body_path: INNO/ReleaseREADME.md  # <--- UPDATED SCRIPT PATH TARGET
+        body_path: INNO/ReleaseREADME.md
         body: |
           ## ⚠️ Windows SmartScreen Notice
           Because FoneCall is open-source and distributed without an expensive corporate signing certificate, Windows Defender SmartScreen may show a warning when running the installer. 
