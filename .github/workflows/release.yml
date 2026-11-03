@@ -1,3 +1,21 @@
+name: Build and Release FoneCall Installer
+
+on:
+  push:
+    tags:
+      - 'v*' # This tells GitHub to run the script whenever a tag starting with "v" is pushed
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
     - name: Build Installer Binary Payload
       run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="bin\Release\Installer"
 
