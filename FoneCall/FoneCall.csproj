@@ -165,7 +165,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="README.md" />
-    <None Include="ReleaseREADME.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -3,7 +3,7 @@ name: Build and Release FoneCall Installer
 on:
   push:
     tags:
-      - 'v*' # This tells GitHub to run the script whenever a tag starting with "v" is pushed
+      - 'v*' # Triggers whenever a tag starting with "v" is pushed
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
 
     - name: Download Microsoft .NET 4.8.1 Runtime Web Installer
       run: |
-        Invoke-WebRequest -Uri "https://microsoft.com" -OutFile "INNO/ndp481-webinstaller.exe"
+        Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?LinkId=2203304" -OutFile "INNO/ndp481-webinstaller.exe"
       shell: powershell
 
     - name: Compile Inno Setup Installer via ISCC
@@ -72,21 +72,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         draft: true  
-        generate_release_notes: true
-        body_path: INNO/ReleaseREADME.md
-        body: |
-          ## ⚠️ Windows SmartScreen Notice
-          Because FoneCall is open-source and distributed without an expensive corporate signing certificate, Windows Defender SmartScreen may show a warning when running the installer. 
-          
-          * **To run the application:** Click the **"More Info"** link on the blue window $\rightarrow$ Click **"Run Anyway"**.
-          
-          ### 📦 Package Formats Included:
-          1. **FoneCall_Setup.zip** - The core standalone user-mode installer.
-          2. **FoneCall_Setup+NDP481-Web.zip** - Installer bundled with the Microsoft .NET 4.8.1 runtime setup file.
-          3. **FoneCall_Portable.zip** - Zero-install standalone folder structure.
-          4. **FoneCall_Portable+NDP481-Web.zip** - Portable folder structure bundled with the Microsoft runtime.
-          
-          ---
+        generate_release_notes: true # Instructs GitHub to parse commits automatically
+        body_path: INNO/ReleaseREADME.md # Pulls your template from the repo first
+        append_body: true # Appends the automated commit log straight to the bottom of the body template
         files: |
           INNO/Output/FoneCall_Setup.zip
           INNO/Output/FoneCall_Setup+NDP481-Web.zip
