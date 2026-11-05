@@ -1,3 +1,6 @@
+Required Notice: Copyright © 2026 LifesRain
+Required Notice: Source Code (<https://github.com/LifesRain/FoneCall>)
+
 # PolyForm Noncommercial License 1.0.0
 
 <https://polyformproject.org/licenses/noncommercial/1.0.0>
@@ -71,3 +74,10 @@ Your company is any legal entity, sole proprietorship, or other kind of organiza
 Your licenses are all the licenses granted to you for the software under these terms.
 
 Use means anything you do with the software requiring one of your licenses.
+
+----------------------------------------------------------------------
+ADDITIONAL NOTICES
+----------------------------------------------------------------------
+This application contains third-party open-source components (including components licensed under the MIT License and Apache License 2.0). These components are not restricted by the PolyForm Noncommercial License. 
+
+For full copyright details and license texts regarding these components, please refer to the THIRD-PARTY-NOTICES.txt file located in the root directory of this installation or in the root of the source repository.

@@ -43,13 +43,13 @@ FoneCall is a native Windows desktop application built to bridge the gap between
 ---
 
 ## Download and Installation
-Installing FnseCall does not require Administrator privileges. The installation package is a standard Windows installer executable. Because FoneCall connects with an individual's smartphone via scrcpy our installer is configured for "User-Mode".
+Installing FnneCall does not require Administrator privileges. The installation package is a standard Windows installer executable. Because FoneCall connects with an individual's smartphone via scrcpy our installer is configured for "User-Mode".
 
 Whether you've installed numerous applications or this is your first time, we strongly recommend reading the [Installation Guide & Caveats](InstallGuide.md). The guide describes the download options and provides important information about the installation process, including potential issues with Windows SmartScreen and how to avoid them.
 
 ### 1. Download FoneCall
 
-Get the latest installation package directly from our repository **[Latest Releases Page](https://github.com)**.
+Get the latest installation package directly from our repository **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
 
 
 ### 2. Basic Setup Steps
@@ -74,6 +74,7 @@ This software is distributed under the [PolyForm Noncommercial License 1.0.0](LI
 
 * **Commercial Entities & Businesses:** Any use of this software to generate revenue, conduct commercial operations, or use within a corporate/business environment requires a paid **Commercial License**.
 * **Everybody Else:** You are free to use, modify, and distribute this software for personal, educational, research, or charitable purposes.
+* **Third-Party Open Source Components:** This application utilizes open-source runtime binary libraries (such as Dapper and SQLite). These dependencies are distributed under their own permissive terms (MIT, Apache 2.0, and Public Domain) and are not subject to the non-commercial restriction. For the full legal text of these licenses, see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
 
 ##### 💼 Commercial Licensing & Enterprise Support
 If you wish to use this application for commercial purposes contact us at:

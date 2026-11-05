@@ -38,7 +38,8 @@ jobs:
     - name: Compile Inno Setup Installer via ISCC
       run: |
         cd INNO
-        ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+#        ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+        ISCC FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
       shell: cmd
 
     - name: Assemble Packaging Matrix

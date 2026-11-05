@@ -13,8 +13,10 @@ if "%releaseFolder:~-1%"=="\" set "releaseFolder=%releaseFolder:~0,-1%"
 echo Release folder target is: %releaseFolder%
 
 echo Windows path must include C:\Program Files\Inno Setup 7
-echo Running ISCC FoneCallGold_Spon.iss
+:: echo Running ISCC FoneCallGold_Spon.iss
+echo Running ISCC FoneCallGold.iss
 
 :: 2. Verified Inno Setup execution line with clean outer-quoting syntax
-ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=%releaseFolder%"
+:: ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=%releaseFolder%"
+ISCC FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=%releaseFolder%"
 pause

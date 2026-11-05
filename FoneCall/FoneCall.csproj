@@ -29,7 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\Installer\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,15 +41,14 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_Portable|AnyCPU'">
-    <OutputPath>bin\Release\Portable\</OutputPath>
-    <DefineConstants>TRACE;;PORTABLE</DefineConstants>
+    <OutputPath>bin\Release_Portable\</OutputPath>
+    <DefineConstants>TRACE;PORTABLE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>2</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -216,6 +215,7 @@
     <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName)==Release call "E:\FoneCall\INNO\ExeISS.cmd"</PostBuildEvent>
+    <PostBuildEvent>if /I "$(ConfigurationName)"=="Release" call "F:\FoneCall_15_OCT\INNO\ExeISS_Spon.cmd" "$(TargetDir)"
+if /I "$(ConfigurationName)"=="Release_Portable" call "F:\FoneCall_15_OCT\INNO\ExeISS_Spon.cmd" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
