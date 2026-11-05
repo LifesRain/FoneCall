@@ -16,18 +16,26 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
+    # Standardized paths to cleanly output into the project subfolder to match downstream staging tasks
     - name: Build Installer Binary Payload
-      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="bin\Release\Installer"
+      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
 
     - name: Build Portable Binary Payload
-      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="bin\Release\Portable"
+      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
 
-    - name: Stage Local Polyform License File
+    # Staging both the Polyform License AND the Open Source notices into compile destinations
+    - name: Stage Local Polyform License & Third Party Notice Files
       run: |
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Installer" -Force
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Portable" -Force
+        
+        # Deploy License
         Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Installer/LICENSE.md" -Force
         Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Portable/LICENSE.md" -Force
+        
+        # Deploy Third-Party Paperwork
+        Copy-Item "THIRD-PARTY-NOTICES.txt" -Destination "FoneCall/bin/Release/Installer/THIRD-PARTY-NOTICES.txt" -Force
+        Copy-Item "THIRD-PARTY-NOTICES.txt" -Destination "FoneCall/bin/Release/Portable/THIRD-PARTY-NOTICES.txt" -Force
       shell: powershell
 
     - name: Download Microsoft .NET 4.8.1 Runtime Web Installer
@@ -35,11 +43,12 @@ jobs:
         Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?LinkId=2203304" -OutFile "INNO/ndp481-webinstaller.exe"
       shell: powershell
 
+    # Fixed cmd shell comment formatting from '#' to 'REM' to prevent runtime runner failures
     - name: Compile Inno Setup Installer via ISCC
       run: |
         cd INNO
-#        ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
-        ISCC FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+        REM ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=%GITHUB_WORKSPACE%\FoneCall\bin\Release\Installer"
+        ISCC FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=%GITHUB_WORKSPACE%\FoneCall\bin\Release\Installer"
       shell: cmd
 
     - name: Assemble Packaging Matrix
@@ -49,20 +58,25 @@ jobs:
         New-Item -ItemType Directory -Path "dist/Option3" -Force
         New-Item -ItemType Directory -Path "dist/Option4" -Force
 
+        # Option 1: Standard Automated Setup Wizard Bundle
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option1/"
 
+        # Option 2: Setup Wizard alongside .NET Framework Installer
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option2/"
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option2/"
 
+        # Option 3: Clean Standalone Portable Binaries Package
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option3/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
 
+        # Option 4: Portable Binaries alongside .NET Framework Installer
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option4/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option4/"
 
+        # Compressing directories with structural preservation integrity
         Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/FoneCall_Setup.zip" -Force
         Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/FoneCall_Setup+NDP481-Web.zip" -Force
         Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/FoneCall_Portable.zip" -Force
@@ -73,9 +87,10 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         draft: true  
-        generate_release_notes: true # Instructs GitHub to parse commits automatically
-        body_path: INNO/ReleaseREADME.md # Pulls your template from the repo first
-        append_body: true # Appends the automated commit log straight to the bottom of the body template
+        generate_release_notes: true 
+        body: |
+          Have you reviewed the [Installation Guide](https://github.com/LifesRain/FoneCall/blob/master/InstallGuide.md) which explains how to avoid the Windows SmartScreen?
+        append_body: true 
         files: |
           INNO/Output/FoneCall_Setup.zip
           INNO/Output/FoneCall_Setup+NDP481-Web.zip
