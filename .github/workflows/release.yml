@@ -43,7 +43,7 @@ jobs:
 
     - name: Download Microsoft .NET 4.8.1 Runtime Web Installer
       run: |
-        Invoke-WebRequest -Uri "https://microsoft.com" -OutFile "INNO/ndp481-webinstaller.exe"
+        Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?LinkId=2203304" -OutFile "INNO/ndp481-webinstaller.exe"
       shell: powershell
 
     - name: Compile Inno Setup Installer via ISCC
