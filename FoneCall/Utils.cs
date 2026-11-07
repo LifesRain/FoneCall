@@ -1,4 +1,4 @@
-﻿#define PORTABLE
+﻿//#define PORTABLE
 
 using System;
 using System.Collections.Generic;
@@ -16,49 +16,49 @@ using System.Windows.Forms;
 
 using Dapper;
 
-
 namespace FoneCall
 {
     public class Paths
     {
-        public static string GetAppDataDirectory()
-        {
-            #if PORTABLE
-                // Portable Version: Look inside the local executing directory
-                return AppDomain.CurrentDomain.BaseDirectory;
-            #else
-                        // Installer Version: Look inside the user's Local AppData folder
-                        return Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "FoneCall" );
-            #endif
-        }
-
         // gets the app's exe directory
         public static string AppExeDir { get; } = AppDomain.CurrentDomain.BaseDirectory;
         //public static string AppExeDir { get; } = AppContext.BaseDirectory;
         public static string AppExeFQN { get; } = Application.ExecutablePath;
 
         // apparently user only has access rights to CommonApplicationData if they & app run as Admin
-        static string PD  = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData );
+        static string PD = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData );
         static string ULD = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
-        public static string AppData 
+
+        public static string GetAppDataDirectory()
+        {
+#if PORTABLE
+            // Portable Version: Look inside the local executing directory
+            return AppDomain.CurrentDomain.BaseDirectory;
+#else
+            // Installer Version: Look inside the user's Local AppData folder
+            return Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "FoneCall" );
+#endif
+        }
+
+        public static string AppData
         {
             get
             {
-                if (AppExeFQN.ToLower().Contains("debug")) return Path.Combine( PD, @"FoneCall\" );
+                if (AppExeFQN.ToLower().Contains( "debug" )) return Path.Combine( PD, @"FoneCall\" );
                 else return Path.Combine( ULD, @"FoneCall\" );
             }
         }
 
+        public static string AppDB { get; } = Path.Combine( AppData, "FoneCall.db" );
+        public static string AppLog { get; } = Path.Combine( AppData, "FoneCall.log" );
+
         /********  FOR UNIT TESTS 
         public static string AppData { get; internal set; } = Application.ExecutablePath;
-         /compute these at runtime from AppData so tests can change AppData and have
+         //compute these at runtime from AppData so tests can change AppData and have
         // AppDB/AppLog reflect that immediately
         public static string AppDB => Path.Combine( AppData, "FoneCall.db" );
         public static string AppLog => Path.Combine( AppData, "FoneCall.log" );
         */
-
-        public static string AppDB { get; } = Path.Combine( AppData, "FoneCall.db" );
-        public static string AppLog { get; } = Path.Combine( AppData, "FoneCall.log" );
 
         public static string Help { get; } = @"E:\FoneCall\Data\scrcpy help.txt"; // used in dev to populate DB
     }
@@ -70,7 +70,7 @@ namespace FoneCall
     }
     public static class TBL
     {
-        public const string Args = "Args";
+        public const string Options = "Options";
         public const string KVP = "KVP";
         public const string StartPos = "StartPos";
         public const string ExeSpec = "ExeSpec";
@@ -133,7 +133,7 @@ namespace FoneCall
                 using (var dbc = new SQLiteConnection( SQLyt() ))
                     dbc.Execute( sql, (T)model );
             }
-            catch (SqlException ex) { LogR.Norm( $"{ex}" ); throw;  }
+            catch (SqlException ex) { LogR.Norm( $"{ex}" ); throw; }
             catch (Exception ex) { LogR.Norm( $"{ex}" ); }
         }
         public static T TypedModel<T>( string sql )
@@ -180,30 +180,15 @@ namespace FoneCall
 
             return scalarValue;
         }
-        private static bool BoolValue( string sql )
-        {
-            bool rtrn = false;
-            try
-            {
-                string scalarValue = "";
-                using (var dbc = new SQLiteConnection( SQLyt() ))
-                    scalarValue = dbc.ExecuteScalar( sql ) as string;
-
-                if (scalarValue != null && (scalarValue.Contains( "1" )
-                    || scalarValue.ToLower().Contains( "true" ))) rtrn = true;
-            }
-            catch (SqlException ex) { LogR.Norm( $"{ex}" ); }
-            catch (Exception ex) { LogR.Norm( $"{ex}" ); }
-
-            return rtrn;
-        }
 
         public static string GetSQLiteVersion() { return OneT_Valu<string>( "SELECT sqlite_version() " ); }
-        public static bool SaveKVP( string key, string valu )
+        public static void SaveKVP( KVP kvp )
         {
+            // using parameterized avoids SQLite injection and
+            // handles special characters in values
             string sql = $"INSERT INTO {TBL.KVP} ( KVP_key,KVP_valu ) " +
-                         $"  VALUES( '{key}', '{valu}' ) ";
-            return BoolValue( sql );
+                $" VALUES(  @KVP_key,@KVP_valu ) ";
+            TypedModelSave<KVP>( sql, kvp );
         }
         public static T KVP_GetValu<T>( string key )
         {
@@ -242,42 +227,35 @@ namespace FoneCall
             string sql = $"DELETE FROM {TBL.ExeSpec}  ";
             JustSQL( sql );
         }
-        public static void SaveArgs_Model( Args args )
+        public static void SaveArgs( Options args )
         {
-            LogR.Norm( $"|=DB=| {TBL.Args} save {args.Arg}\n{args.Explain}" );
-            string sql = $"INSERT INTO {TBL.Args}  ( Role,Arg,Explain ) VALUES(  @Role,@Arg,@Explain ) ";
-            TypedModelSave<Args>( sql, args );
-        }
-        public static void SaveArgs( string role, string arg, string explain )
-        {
-            LogR.Norm( $"|=DB=| {TBL.Args} save {arg}\n{explain}" );
-            string sql;
-            if (role == Xfer.R_arg) sql = $"INSERT INTO {TBL.Args} ( Arg,Explain ) VALUES( '{arg}', '{explain}' ) ";
-            else sql = $"INSERT INTO {TBL.Args}  ( Role,Arg,Explain ) VALUES( '{role}', '{arg}', '{explain}' ) ";
-            JustSQL( sql );
+            LogR.Norm( $"|=DB=| {TBL.Options} save {args.Option}\n{args.Desc}" );
+            string sql = $"INSERT INTO {TBL.Options}  ( Role,Arg,Explain )" +
+                $" VALUES(  @Role,@Arg,@Explain ) ";
+            TypedModelSave<Options>( sql, args );
         }
         public static bool CheckArg( string name )
         {
-            string sql = $"SELECT Arg FROM {TBL.Args}" +
+            string sql = $"SELECT Arg FROM {TBL.Options}" +
                          $" WHERE Arg LIKE '%{name}%' ";
             return OneT_Valu<string>( sql ) != null;
         }
         public static string GetVer()
         {
             string name = "VER";
-            string sql = $"SELECT Arg FROM {TBL.Args}" +
+            string sql = $"SELECT Arg FROM {TBL.Options}" +
                          $" WHERE Role='{name}' ";
             return OneT_Valu<string>( sql ) ?? string.Empty;
         }
-        public static List<Args> GetArgs()
+        public static List<Options> GetArgs()
         {
-            string sql = $"SELECT * FROM {TBL.Args}";
-            return TypedList<Args>( sql );
+            string sql = $"SELECT * FROM {TBL.Options}";
+            return TypedList<Options>( sql );
         }
         public static void ClearArgs()
         {
-            LogR.Norm( $"|=DB=| {TBL.Args} clear" );
-            string sql = $"DELETE FROM {TBL.Args}  ";
+            LogR.Norm( $"|=DB=| {TBL.Options} clear" );
+            string sql = $"DELETE FROM {TBL.Options}  ";
             JustSQL( sql );
         }
         public static void StartPos_Save( StartPos model )
@@ -311,11 +289,17 @@ namespace FoneCall
         public string ScrcpyFQN { get; set; }
         public string Arguments { get; set; }
     }
-    public class Args
+    public class KVP
+    {
+        public string KVP_key { get; set; }
+        public string KVP_valu { get; set; }
+    }
+    public class Options
     {
         public string Role { get; set; }
-        public string Arg { get; set; }
-        public string Explain { get; set; }
+        public string Used { get; set; }
+        public string Option { get; set; }
+        public string Desc { get; set; }
     }
     public class States
     {
@@ -797,7 +781,7 @@ namespace FoneCall
             try
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                return assemblies.Any(a =>
+                return assemblies.Any( a =>
                 {
                     var n = a.FullName ?? string.Empty;
                     return n.StartsWith( "Microsoft.VisualStudio.TestPlatform", StringComparison.OrdinalIgnoreCase )

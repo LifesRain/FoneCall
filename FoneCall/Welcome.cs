@@ -41,7 +41,7 @@ namespace FoneCall
         }
         private void PopulateRTBX()
         {
-            string rtfCode = DBC.KVP_GetValu<string>( KVP_Keys.Intro ).Replace( "##", "'" );
+            string rtfCode = DBC.KVP_GetValu<string>( KVP_Keys.Intro );
 
             // HYPERLINK inn rtf code is a "placeholder" with desired text
             // result of clicking dictated by LinkClicked evvent handfer

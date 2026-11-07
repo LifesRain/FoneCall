@@ -85,8 +85,8 @@ namespace FoneCall
 
         private void PopulateDGVs()
         {
-            List<Args> args = DBC.GetArgs();
-            int argsNum = args.Count;
+            List<Options> args = DBC.GetArgs();
+            7int argsNum = args.Count;
             if (args != null && argsNum > 0)
             {
                 for (int i = 0; i < args.Count; i++)
@@ -99,8 +99,8 @@ namespace FoneCall
                         : _displayNum.ToString();
                     // Ensure neither Arg nor Role is null to avoid CS8602/CS8604
                     string roleValue = args[i].Role ?? string.Empty;
-                    string argValue = args[i].Arg ?? string.Empty;
-                    string explainValue = args[i].Explain ?? string.Empty;
+                    string argValue = args[i].Option ?? string.Empty;
+                    string explainValue = args[i].Desc ?? string.Empty;
                     DGV.Rows.Add( raNum, roleValue, argValue, explainValue );
                 }
             }
@@ -277,9 +277,9 @@ namespace FoneCall
                        o = cellObj_2 as string ?? null,
                        exp = cellObj_3 as string ?? null;
 
-                Args args = exp is null
-                       ? new Args { Role = r, Arg = o } : new Args { Role = r, Arg = o, Explain = exp };
-                DBC.SaveArgs_Model( args );
+                Options args = exp is null
+                       ? new Options { Role = r, Option = o } : new Options { Role = r, Option = o, Desc = exp };
+                DBC.SaveArgs( args );
             }
         }
         private void CancelBTN_Click( object sender, EventArgs e )

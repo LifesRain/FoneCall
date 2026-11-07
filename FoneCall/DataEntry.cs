@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -54,7 +53,7 @@ namespace FoneCall
             base.OnShown( e );
 
             // only true if not started from ApplicationContext & if from Context ExeSpec is null
-            if (_caller.I_form != null) 
+            if (_caller.I_form != null)
             {
                 _caller.I_form.Close();
                 var spec = DBC.GetExeSpec();
@@ -185,7 +184,7 @@ namespace FoneCall
         {
             if (sender is TextBox tbx)
             {
-                if (string.IsNullOrWhiteSpace( tbx.Text ) || tbx.Text.Contains("e.g."))
+                if (string.IsNullOrWhiteSpace( tbx.Text ) || tbx.Text.Contains( "e.g." ))
                 { _argsOK = false; return; }
 
                 if (tbx.Text.Contains( "-" ))
@@ -232,7 +231,7 @@ namespace FoneCall
         private bool CanSave()
         {
             string fqnText = FQN_TBX.Text?.Trim() ?? string.Empty;
-            bool ok = File.Exists(fqnText) && fqnText.Contains("scrcpy.exe");
+            bool ok = File.Exists( fqnText ) && fqnText.Contains( "scrcpy.exe" );
             VERIFIED_LBL.Visible = ok;
             return ok;
         }

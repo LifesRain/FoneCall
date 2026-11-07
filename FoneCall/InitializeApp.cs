@@ -45,7 +45,7 @@ namespace FoneCall
 
             LogR.Norm( _logMsgs.ToString() );
 
-            //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
+            DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
             //DBC.ClearExeSpec(); // for testing
 
             #region logging start state
@@ -58,7 +58,7 @@ namespace FoneCall
             #endregion
 
             // used in dev to populate preloaded content in DB; left in or posterity 
-            //SaveRTFtoDB();
+            //SaveRTFtoDB(null );
             //SaveOptsToDB();
 
             _cmb.I_form = null;
@@ -144,11 +144,11 @@ namespace FoneCall
 
             void save2db( string r, string o, string e )
             {
-                Args args = new Args { Role = r, Arg = o, Explain = e };
-                DBC.SaveArgs_Model( args );
+                Options args = new Options { Role = r, Option = o, Desc = e };
+                DBC.SaveArgs( args );
             }
         }
-        public static void SaveRTFtoDB()
+        public static void SaveRTFtoDB( string rtfFQN )
         {
             #region rtf code behind acquisition
             // 2 RTF editors used Microsoft Word and Jarte Plus
@@ -158,12 +158,13 @@ namespace FoneCall
             // process was [1] create .docx in Word [2] Save As .rtf  [3] close doc
             // [4] open in Jarte [5] Save As working name referenced in ReadAllText
             #endregion
-            string rtfCode = File.ReadAllText( @"E:\__DOCS\FoneCallWelcome.rtf" );
+            string rtfCode = rtfFQN != null ? rtfFQN : File.ReadAllText( @"E:\__DOCS\FoneCallWelcome.rtf" );
             // removes non-printable NUL appended to Jarte RTF files
             rtfCode = Regex.Replace( rtfCode, @"\p{C}+", string.Empty );
-            rtfCode = rtfCode.Replace( "'", "''" ); // SQLite single quote escape
+            //rtfCode = rtfCode.Replace( "'", "''" ); // SQLite single quote escape
             DBC.DeleteKVPrecord( KVP_Keys.Intro );
-            DBC.SaveKVP( KVP_Keys.Intro, rtfCode );
+            KVP kvp = new KVP { KVP_key = KVP_Keys.Intro, KVP_valu = rtfCode };
+            DBC.SaveKVP( kvp );
             LogR.Norm( "RTF saved to DB" );
         }
         private static async Task RunChecks( bool startHeader )
