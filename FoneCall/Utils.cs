@@ -20,47 +20,65 @@ namespace FoneCall
 {
     public class Paths
     {
-        // gets the app's exe directory
-        public static string AppExeDir { get; } = AppDomain.CurrentDomain.BaseDirectory;
-        //public static string AppExeDir { get; } = AppContext.BaseDirectory;
-        public static string AppExeFQN { get; } = Application.ExecutablePath;
+        public static readonly string AppExeDir = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string AppExeFQN = Application.ExecutablePath;
+        public static readonly string PD = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData );
+        private static readonly string ULD = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
 
-        // apparently user only has access rights to CommonApplicationData if they & app run as Admin
-        static string PD = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData );
-        static string ULD = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+        // 1. Backing field used EXCLUSIVELY when executing under a unit testing framework
+        private static string _appDataOverride = string.Empty;
 
-        public static string GetAppDataDirectory()
-        {
-#if PORTABLE
-            // Portable Version: Look inside the local executing directory
-            return AppDomain.CurrentDomain.BaseDirectory;
-#else
-            // Installer Version: Look inside the user's Local AppData folder
-            return Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "FoneCall" );
-#endif
-        }
-
+        // 2. Automated AppData Property: Switches dynamically based on runtime context
+        // Automated AppData Property: Switches dynamically based on runtime context
         public static string AppData
         {
             get
             {
-                if (AppExeFQN.ToLower().Contains( "debug" )) return Path.Combine( PD, @"FoneCall\" );
-                else return Path.Combine( ULD, @"FoneCall\" );
+                if (!string.IsNullOrEmpty( _appDataOverride ))
+                    return _appDataOverride;
+
+#if PORTABLE
+        return AppExeDir;
+#else
+                if (AppExeFQN.ToLower().Contains( "debug" ))
+                    return Path.Combine( PD, $@"{Xfer.AppName}\" );
+
+                return Path.Combine( ULD, $@"{Xfer.AppName}\" );
+#endif
+            }
+
+            internal set
+            {
+                _appDataOverride = value ?? string.Empty;
             }
         }
+        // Dynamically locate the solution root directory by traversing parent directories
+        // used to eliminate hard -coded paths in prod & unit tests and ensure that required
+        // data files are always accessed relative to the solution root
+        public static string SolutionRoot
+        {
+            get
+            {
+                DirectoryInfo directory = new DirectoryInfo( AppExeDir );
+                while (directory != null)
+                {
+                    if (directory.GetFiles( "*.sln" ).Length > 0) return directory.FullName;
+                    directory = directory.Parent;
+                }
+                return null;
+            }
+        }
+        public static string SolutionData => Path.Combine( SolutionRoot, @"Data\" );
 
-        public static string AppDB { get; } = Path.Combine( AppData, "FoneCall.db" );
-        public static string AppLog { get; } = Path.Combine( AppData, "FoneCall.log" );
+        // 3. Keep these as clean expression-bodied properties so they dynamically adapt instantly
+        public static string AppDB => Path.Combine( AppData, $"{Xfer.AppName}.db" );
+        public static string AppLog => Path.Combine( AppData, $"{Xfer.AppName}.log" );
 
-        /********  FOR UNIT TESTS 
-        public static string AppData { get; internal set; } = Application.ExecutablePath;
-         //compute these at runtime from AppData so tests can change AppData and have
-        // AppDB/AppLog reflect that immediately
-        public static string AppDB => Path.Combine( AppData, "FoneCall.db" );
-        public static string AppLog => Path.Combine( AppData, "FoneCall.log" );
-        */
-
-        public static string Help { get; } = @"E:\FoneCall\Data\scrcpy help.txt"; // used in dev to populate DB
+        // Dynamic validation fallback for testing environments, else standard drive location
+        public static string Help => WinCtrl.IsTesting()
+            ? Path.Combine( AppData, "Data", "scrcpy help.txt" )
+            : @"E:\FoneCall\Data\scrcpy help.txt";
+        public static string Options => Path.Combine( SolutionData, "scrcpy_Options.txt" );
     }
     public static class KVP_Keys
     {
@@ -77,13 +95,7 @@ namespace FoneCall
     }
     public static class Xfer
     {
-        public const string R_arg = "ARG";
-        public const string R_shrt = "SCT";
-        public const string R_environ = "ENV";
-        public const string R_exit = "ES";
-        public const string R_ver = "VER";
-
-        public const string DBaMod = "GetMod";
+        public const string AppName = "FoneCall";
         public const string Exit = "Exit";
         public const string Run = "RUN scrcpy";
         public const string Save = "Save to DB";
@@ -94,6 +106,7 @@ namespace FoneCall
                 "- Ensure that all requested Arguments are valid.\n" +
                 "- Verify that you have the necessary permissions to execute the file.\n" +
                 "- Check if any antivirus or security software is blocking the execution.\n\n" +
+                "- Ensure your phone is accessible le via Windows File Explorer\n" +
                 "If the issue persists after checking the above\nFoneCall may need to be reinstalled.";
 
         public static List<ICaller> OpenWins { get; set; }
@@ -102,8 +115,16 @@ namespace FoneCall
     }
     public static class DBC
     {
+        // Allows tests to explicitly redirect DB operations
+        public static string ConnectionStringOverride { get; set; }
+
         public static SQLiteConnection SQLyt()
         {
+            if (!string.IsNullOrEmpty( ConnectionStringOverride ))
+            {
+                return new SQLiteConnection( ConnectionStringOverride );
+            }
+
             var csb = new SQLiteConnectionStringBuilder
             {
                 DataSource = Paths.AppDB,
@@ -111,6 +132,65 @@ namespace FoneCall
                 FailIfMissing = true,
             };
             return new SQLiteConnection( csb.ConnectionString );
+        }
+
+        public static void InitializeTestDatabase( string dbPath )
+        {
+            // theere is native condition that could triggger use of corrrectt source db duriing unit tests,
+            // so we need to ensure that the source db is always available  by hard-coding the path to the source db 
+            string sourcePath = Path.Combine( Paths.PD, Xfer.AppName, $"{Xfer.AppName}.db" );
+
+            if (!File.Exists( sourcePath ))
+                throw new FileNotFoundException(
+                    "The source application database was not found.",
+                    sourcePath );
+
+            if (File.Exists( dbPath ))
+                File.Delete( dbPath );
+
+            SQLiteConnection.CreateFile( dbPath );
+
+            using (var source = new SQLiteConnection(
+                $"Data Source={sourcePath};Version=3;" ))
+            using (var target = new SQLiteConnection(
+                $"Data Source={dbPath};Version=3;" ))
+            {
+                source.Open();
+                target.Open();
+
+                var schemaSql = new List<string>();
+
+                using (var command = source.CreateCommand())
+                {
+                    command.CommandText = @"
+                SELECT sql
+                FROM sqlite_master
+                WHERE type = 'table'
+                  AND sql IS NOT NULL
+                  AND name NOT LIKE 'sqlite_%'
+                ORDER BY name;";
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            schemaSql.Add( reader.GetString( 0 ) );
+                    }
+                }
+
+                using (var transaction = target.BeginTransaction())
+                using (var command = target.CreateCommand())
+                {
+                    command.Transaction = transaction;
+
+                    foreach (string createSql in schemaSql)
+                    {
+                        command.CommandText = createSql;
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
         }
         public static Task<bool> CheckDB()
         {
@@ -218,7 +298,7 @@ namespace FoneCall
         }
         public static ExeSpec GetExeSpec()
         {
-            string sql = $"SELECT * FROM {TBL.ExeSpec} WHERE RecID='{Xfer.DBaMod}' ";
+            string sql = $"SELECT * FROM {TBL.ExeSpec} LIMIT 1 ";
             return TypedModel<ExeSpec>( sql );
         }
         public static void ClearExeSpec()
@@ -230,21 +310,27 @@ namespace FoneCall
         public static void SaveArgs( Options args )
         {
             LogR.Norm( $"|=DB=| {TBL.Options} save {args.Option}\n{args.Desc}" );
-            string sql = $"INSERT INTO {TBL.Options}  ( Role,Arg,Explain )" +
-                $" VALUES(  @Role,@Arg,@Explain ) ";
+
+            string sql =
+                $"INSERT INTO {TBL.Options} ( Role,Used,Option,Desc ) " +
+                $"VALUES( @Role,@Used,@Option,@Desc )";
+
             TypedModelSave<Options>( sql, args );
         }
         public static bool CheckArg( string name )
         {
-            string sql = $"SELECT Arg FROM {TBL.Options}" +
-                         $" WHERE Arg LIKE '%{name}%' ";
+            string sql =
+                $"SELECT Option FROM {TBL.Options} " +
+                $"WHERE Option LIKE '%{name}%' ";
+
             return OneT_Valu<string>( sql ) != null;
         }
         public static string GetVer()
         {
-            string name = "VER";
-            string sql = $"SELECT Arg FROM {TBL.Options}" +
-                         $" WHERE Role='{name}' ";
+            string sql =
+                $"SELECT Option FROM {TBL.Options} " +
+                $"WHERE Role='VER' ";
+
             return OneT_Valu<string>( sql ) ?? string.Empty;
         }
         public static List<Options> GetArgs()
@@ -566,7 +652,7 @@ namespace FoneCall
             // Avoid creating window handles or calling ToolTip.Show() when running under unit tests
             // or when the control does not have a valid handle. In those cases return the ToolTip
             // instance without calling Show so callers can still call Hide/Dispose safely.
-            if (ctrl == null || !ctrl.IsHandleCreated || WinCtrl.IsRunningUnderUnitTests())
+            if (ctrl == null || !ctrl.IsHandleCreated || WinCtrl.IsTesting())
             {
                 return _customTT;
             }
@@ -768,7 +854,7 @@ namespace FoneCall
                 if (Xfer.OpenWins.Count == 0)
                 {
                     LogR.Norm( "all windows closed -- exiting FoneCall" );
-                    if (!IsRunningUnderUnitTests()) Application.Exit();
+                    if (!IsTesting()) Application.Exit();
                 }
             }
             catch (Exception ex) { LogR.Norm( $"error in UnregisterWin {ex}" ); }
@@ -776,18 +862,20 @@ namespace FoneCall
 
         // Detect common test runners so we can avoid calling Application.Exit() during unit tests.
         // Not foolproof but prevents test runs from inadvertently terminating the test host.
-        public static bool IsRunningUnderUnitTests()
+        public static bool IsTesting()
         {
             try
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 return assemblies.Any( a =>
                 {
-                    var n = a.FullName ?? string.Empty;
-                    return n.StartsWith( "Microsoft.VisualStudio.TestPlatform", StringComparison.OrdinalIgnoreCase )
-                        || n.IndexOf( "nunit", StringComparison.OrdinalIgnoreCase ) >= 0
-                        || n.IndexOf( "xunit", StringComparison.OrdinalIgnoreCase ) >= 0
-                        || n.IndexOf( "Microsoft.VisualStudio.QualityTools", StringComparison.OrdinalIgnoreCase ) >= 0;
+                    // Convert to lowercase first to ensure case-insensitive matching in .NET 4.8
+                    var n = (a.FullName ?? string.Empty).ToLower();
+
+                    return n.StartsWith( "microsoft.visualstudio.testplatform" )
+                        || n.Contains( "nunit" )
+                        || n.Contains( "xunit" )
+                        || n.Contains( "microsoft.visualstudio.qualitytools" );
                 } );
             }
             catch
@@ -823,6 +911,5 @@ namespace FoneCall
             }
             else form.Location = new Point( sp.Form_L, sp.Form_T );
         }
-
     }
 }

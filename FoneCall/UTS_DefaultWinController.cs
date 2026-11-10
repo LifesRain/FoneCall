@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FoneCall
 {
-    public class DefaultWinController : UTS_IWinController
+    internal class DefaultWinController : UTS_IWinController
     {
         public void RestoreDBwinPos( Form f ) => WinCtrl.RestoreDBwinPos( f );
         public void RegisterWin( ICaller caller ) => WinCtrl.RegisterWin( caller );
@@ -15,6 +15,6 @@ namespace FoneCall
         public string CstmmMB_Call( ICaller passThru ) => WinCtrl.CstmmMB_Call( passThru );
         public void SaveWinPos( Form f ) => WinCtrl.SaveWinPos( f );
         public void UnregisterWin( ICaller caller ) => WinCtrl.UnregisterWin( caller );
-        public bool IsRunningUnderUnitTests() => WinCtrl.IsRunningUnderUnitTests();
+        public bool IsRunningUnderUnitTests() => WinCtrl.IsTesting();
     }
 }

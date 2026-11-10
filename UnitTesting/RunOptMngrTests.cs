@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
+using Dapper;
 
 using FoneCall;
 
@@ -13,12 +17,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTesting
 {
     [TestClass]
+    [DoNotParallelize]
     public class RunOptMngrTests
     {
         private string _tempDir = string.Empty;
-        private string _dbPath = string.Empty;
+        private string _dbPath { get; set; } = string.Empty;
         private string _logPath = string.Empty;
-        private string? _originalAppData = string.Empty;
 
         [TestInitialize]
         public void TestInitialize()
@@ -29,52 +33,21 @@ namespace UnitTesting
             _dbPath = Path.Combine( _tempDir, "FoneCall.db" );
             _logPath = Path.Combine( _tempDir, "FoneCall.log" );
 
-            SQLiteConnection.CreateFile( _dbPath );
-            using (var cn = new SQLiteConnection( $"Data Source={_dbPath};Version=3;" ))
-            {
-                cn.Open();
-                using (var cmd = cn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                        CREATE TABLE IF NOT EXISTS Args (
-                            RecID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            Role TEXT,
-                            Arg TEXT,
-                            Explain TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS KVP (
-                            KVP_key TEXT PRIMARY KEY,
-                            KVP_valu TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS ExeSpec (
-                            RecID TEXT PRIMARY KEY,
-                            ScrcpyFQN TEXT,
-                            Arguments TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS StartPos (
-                            RecID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            ScreenName TEXT,
-                            FormName TEXT,
-                            Form_L INTEGER,
-                            Form_T INTEGER
-                        );
-                        ";
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            // Create an empty sqlite DB and required tables
+            DBC.InitializeTestDatabase( _dbPath );
+            // Force the DBC context to point directly to your test file
+            DBC.ConnectionStringOverride = $"Data Source={_dbPath};Version=3;";
 
-            // Backup original AppData backing field only
-            _originalAppData = GetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField" ) as string;
-
-            // Override Paths.AppData to point to our temp folder (AppDB/AppLog are computed)
-            SetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField", _tempDir + Path.DirectorySeparatorChar );
+            // relies on
+            // [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "UnitTesting" )]
+            // in AssemblyInfo.cs
+            Paths.AppData = _tempDir + Path.DirectorySeparatorChar;
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            if (_originalAppData != null)
-                SetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField", _originalAppData );
+            DBC.ConnectionStringOverride = null;
 
             try { if (Directory.Exists( _tempDir )) Directory.Delete( _tempDir, true ); } catch { }
         }
@@ -143,7 +116,7 @@ namespace UnitTesting
                     using (var cn = new SQLiteConnection( $"Data Source={_dbPath};Version=3;" ))
                     {
                         cn.Open();
-                        using (var cmd = cn.CreateCommand()) { cmd.CommandText = "DELETE FROM Args"; cmd.ExecuteNonQuery(); }
+                        using (var cmd = cn.CreateCommand()) { cmd.CommandText = "DELETE FROM Options"; cmd.ExecuteNonQuery(); }
                     }
 
                     // Add one valid row and one empty row (which should be skipped)
@@ -163,7 +136,7 @@ namespace UnitTesting
                         cn.Open();
                         using (var cmd = cn.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT Role,Arg,Explain FROM Args";
+                            cmd.CommandText = "SELECT Role, Option, Desc FROM Options";
                             using (var rdr = cmd.ExecuteReader())
                             {
                                 int rows = 0; bool found = false;
@@ -171,7 +144,7 @@ namespace UnitTesting
                                 {
                                     rows++;
                                     var role = rdr["Role"] as string;
-                                    var arg = rdr["Arg"] as string;
+                                    var arg = rdr["Option"] as string;
                                     if (arg == "--opt1" && role == "R1") found = true;
                                 }
                                 Assert.AreEqual( 1, rows );
@@ -222,14 +195,14 @@ namespace UnitTesting
                     cn.Open();
                     using (var cmd = cn.CreateCommand())
                     {
-                        cmd.CommandText = "INSERT INTO Args (Role,Arg,Explain) VALUES (@r,@a,@e)";
+                        cmd.CommandText = "INSERT INTO Options (Role, Option, Desc) VALUES (@r,@a,@e)";
                         var p1 = cmd.CreateParameter(); p1.ParameterName = "@r"; p1.Value = "R1"; cmd.Parameters.Add( p1 );
                         var p2 = cmd.CreateParameter(); p2.ParameterName = "@a"; p2.Value = "--opt1"; cmd.Parameters.Add( p2 );
                         var p3 = cmd.CreateParameter(); p3.ParameterName = "@e"; p3.Value = "explain1"; cmd.Parameters.Add( p3 );
                         cmd.ExecuteNonQuery();
                         cmd.Parameters.Clear();
 
-                        cmd.CommandText = "INSERT INTO Args (Role,Arg,Explain) VALUES (@r,@a,@e)";
+                        cmd.CommandText = "INSERT INTO Options (Role, Option, Desc) VALUES (@r,@a,@e)";
                         var q1 = cmd.CreateParameter(); q1.ParameterName = "@r"; q1.Value = DBNull.Value; cmd.Parameters.Add( q1 );
                         var q2 = cmd.CreateParameter(); q2.ParameterName = "@a"; q2.Value = "--opt2"; cmd.Parameters.Add( q2 );
                         var q3 = cmd.CreateParameter(); q3.ParameterName = "@e"; q3.Value = DBNull.Value; cmd.Parameters.Add( q3 );
@@ -279,7 +252,7 @@ namespace UnitTesting
                     cn.Open();
                     using (var cmd = cn.CreateCommand())
                     {
-                        cmd.CommandText = "INSERT INTO Args (Role,Arg,Explain) VALUES ('R1','--opt1','explain1')";
+                        cmd.CommandText = "INSERT INTO Options (Role, Option, Desc) VALUES ('R1','--opt1','explain1')";
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -309,19 +282,6 @@ namespace UnitTesting
                 finally { try { form.Close(); } catch { } try { form.Dispose(); } catch { } }
                 return null;
             } );
-        }
-
-        // Reflection helpers
-        private object? GetBackingFieldValue( Type t, string fieldName )
-        {
-            var fi = t.GetField( fieldName, BindingFlags.Static | BindingFlags.NonPublic );
-            return fi?.GetValue( null );
-        }
-        private void SetBackingFieldValue( Type t, string fieldName, object value )
-        {
-            var fi = t.GetField( fieldName, BindingFlags.Static | BindingFlags.NonPublic );
-            if (fi == null) Assert.Inconclusive( $"Could not find backing field '{fieldName}' on type {t.FullName}." );
-            fi.SetValue( null, value );
         }
     }
 }

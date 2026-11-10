@@ -41,15 +41,27 @@ namespace FoneCall
         }
         private void PopulateRTBX()
         {
-            string rtfCode = DBC.KVP_GetValu<string>( KVP_Keys.Intro );
+            string rtfCode = DBC.KVP_GetValu<string>( KVP_Keys.Intro ) ?? string.Empty;
 
-            // HYPERLINK inn rtf code is a "placeholder" with desired text
-            // result of clicking dictated by LinkClicked evvent handfer
-            MemoryStream stream = new MemoryStream( Encoding.UTF8.GetBytes( rtfCode ) );
-            RTBX.LoadFile( stream, RichTextBoxStreamType.RichText );
+            try
+            {
+                using (var stream = new MemoryStream( Encoding.UTF8.GetBytes( rtfCode ) ))
+                {
+                    RTBX.LoadFile( stream, RichTextBoxStreamType.RichText );
+                }
+            }
+            catch (ArgumentException)
+            {
+                // Allow plain-text Intro values in test databases or older databases.
+                RTBX.Text = rtfCode;
+            }
+
             LogR.Norm( "One-time display of usage instructions" );
+
             string[] rtbxTxt = RTBX.Lines;
-            for (int i = 0; i < rtbxTxt.Length; i++) LogR.Norm( $"\t{rtbxTxt[i]}" );
+            for (int i = 0; i < rtbxTxt.Length; i++)
+                LogR.Norm( $"\t{rtbxTxt[i]}" );
+
             LogR.Norm( $"\t{LogLBL.Text}" );
         }
         private void AdjustForm()
@@ -89,7 +101,7 @@ namespace FoneCall
         protected override void OnFormClosed( FormClosedEventArgs e )
         {
             base.OnFormClosed( e );
-            if (WinCtrl.IsRunningUnderUnitTests()) return;
+            if (WinCtrl.IsTesting()) return;
 
             WinCtrl.SaveWinPos( this );
             WinCtrl.UnregisterWin( this );

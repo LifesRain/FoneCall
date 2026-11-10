@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
+// Gefoneneral Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle( "FoneCall" )]
@@ -11,7 +11,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct( "FoneCall" )]
 [assembly: AssemblyCopyright( "Copyright ©  2026" )]
 [assembly: AssemblyTrademark( "" )]
-[assembly: AssemblyCulture( "" )]
+
+// Grant the separate unit test project direct native access to all internal components
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "UnitTesting" )]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

@@ -31,7 +31,6 @@
 
     <!-- Single explicit unify entry -->
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.12" />
   </ItemGroup>
 
   <ItemGroup>

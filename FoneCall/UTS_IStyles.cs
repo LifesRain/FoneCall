@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FoneCall
 {
-    public interface UTS_IStyles
+    internal interface UTS_IStyles
     {
         Font Std_9_R { get; }
         Color PaleRed { get; }

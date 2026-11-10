@@ -435,7 +435,7 @@ namespace FoneCall
         protected override void OnFormClosed( FormClosedEventArgs e )
         {
             base.OnFormClosed( e );
-            if (WinCtrl.IsRunningUnderUnitTests()) return;
+            if (WinCtrl.IsTesting()) return;
 
             WinCtrl.SaveWinPos( this );
             WinCtrl.UnregisterWin( this );

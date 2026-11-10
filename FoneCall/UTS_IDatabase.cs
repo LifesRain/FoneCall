@@ -1,7 +1,7 @@
 // CSharp FoneCall\Services\IDatabase.cs
 namespace FoneCall
 {
-    public interface UTS_IDatabase
+    internal interface UTS_IDatabase
     {
         string GetVer();
         ExeSpec GetExeSpec();

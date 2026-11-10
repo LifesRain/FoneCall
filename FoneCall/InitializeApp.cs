@@ -27,6 +27,9 @@ namespace FoneCall
             /// installer package || app split into three forms due problem with panel
             /// visibility flashing during load
             /// n.b..I believe problem could be solved with SuspendLayout() see RunOptMngr
+            // ensure InitializeTestDatabase creates correct schema and populates with test data
+            //string dbFQN = @"F:\TestDB.sqlite"; 
+            //DBC.InitializeTestDatabase( dbFQN );
 
             _logMsgs = new StringBuilder();
             await RunChecks( startHeader: true );
@@ -44,8 +47,13 @@ namespace FoneCall
             #endregion
 
             LogR.Norm( _logMsgs.ToString() );
+            LogR.Norm( $"{DateTime.UtcNow} AppData path {Paths.AppData}" );
 
-            DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
+            string[] solDir = Directory.GetFiles( Paths.SolutionData, "*", SearchOption.AllDirectories );
+            LogR.Norm( $"{DateTime.UtcNow} Solution Data path {Paths.SolutionData}\nSolution Data files:" );
+            foreach (string f in solDir) LogR.Norm( $"  {Path.GetFileName( f)}" );
+
+            //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
             //DBC.ClearExeSpec(); // for testing
 
             #region logging start state
@@ -59,14 +67,14 @@ namespace FoneCall
 
             // used in dev to populate preloaded content in DB; left in or posterity 
             //SaveRTFtoDB(null );
-            //SaveOptsToDB();
+            //SaveOptsToDB( testHelpFQN: null );
 
             _cmb.I_form = null;
             if (DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )) WinCtrl.Call_Welcome( _cmb );
             else if (DBC.GetExeSpec() == null) WinCtrl.Call_DataEntry( _cmb );
             else WinCtrl.Call_RunSCRCPY( _cmb, noDelay: false );
         }
-        public static void SaveOptsToDB()
+        public static void SaveOptsToDB( string testHelpFQN )
         {
             #region workflow
             // based on Copilot suggestion; worked (sort of) only or Arguments
@@ -80,9 +88,10 @@ namespace FoneCall
             #endregion
 
             int hderLine = -1;
-            string fqnHelp = @"E:\FoneCall\Data\scrcpy help.txt",
+            //string fqnHelp = testHelpFQN != null ? testHelpFQN : @"E:\FoneCall\Data\scrcpy help.txt",
+            string fqnHelp = testHelpFQN != null ? testHelpFQN : Paths.Options,
                    role = "", optTxt = "", explain = "";
-
+            LogR.Norm( $"{DateTime.UtcNow} SaveOptsToDB: help file path: {fqnHelp}" );
             // Guard: if help file is missing or empty, do nothing and do not throw
             try
             {
@@ -148,20 +157,23 @@ namespace FoneCall
                 DBC.SaveArgs( args );
             }
         }
-        public static void SaveRTFtoDB( string rtfFQN )
+        public static void SaveRTFtoDB( string rtfFQN = null )
         {
-            #region rtf code behind acquisition
-            // 2 RTF editors used Microsoft Word and Jarte Plus
-            // Word for doc dev and Jarte for "code behind"
-            // Word''s  "code behind" was too complex to manipulate
-            // programmatically and Jarte too limited for creation
-            // process was [1] create .docx in Word [2] Save As .rtf  [3] close doc
-            // [4] open in Jarte [5] Save As working name referenced in ReadAllText
-            #endregion
-            string rtfCode = rtfFQN != null ? rtfFQN : File.ReadAllText( @"E:\__DOCS\FoneCallWelcome.rtf" );
+            // Fix: Read the file text from the provided path, or fall back to the production path
+            string targetPath = !string.IsNullOrEmpty( rtfFQN )
+                ? rtfFQN : Path.Combine( Paths.SolutionData, "FoneCallWelcome.rtf" );
+
+            if (!File.Exists( targetPath ))
+            {
+                LogR.Norm( $"RTF source file missing at target path: {targetPath}" );
+                return;
+            }
+
+            string rtfCode = File.ReadAllText( targetPath );
+
             // removes non-printable NUL appended to Jarte RTF files
             rtfCode = Regex.Replace( rtfCode, @"\p{C}+", string.Empty );
-            //rtfCode = rtfCode.Replace( "'", "''" ); // SQLite single quote escape
+
             DBC.DeleteKVPrecord( KVP_Keys.Intro );
             KVP kvp = new KVP { KVP_key = KVP_Keys.Intro, KVP_valu = rtfCode };
             DBC.SaveKVP( kvp );

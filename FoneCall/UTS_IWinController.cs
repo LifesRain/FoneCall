@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FoneCall
 {
-    public interface UTS_IWinController
+    internal interface UTS_IWinController
     {
         void RestoreDBwinPos( Form f );
         void RegisterWin( ICaller caller );

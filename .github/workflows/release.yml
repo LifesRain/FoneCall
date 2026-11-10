@@ -2,8 +2,7 @@ name: Build and Release FoneCall Installer
 
 on:
   push:
-    tags:
-      - 'v*' # Triggers whenever a tag starting with "v" is pushed
+  - 'v*' # Triggers whenever a tag starting with "v" is pushed
 
 jobs:
   build:
@@ -19,15 +18,15 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # Restores all missing package dependencies before attempting compilation
+    # CRUCIAL: Fetches Dapper, SQLite, and Microsoft packages onto the clean GitHub runner
     - name: Restore NuGet Packages
       run: nuget restore FoneCall.sln
 
     - name: Build Installer Binary Payload
-      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+      run: msbuild FoneCall.sln /t:Build /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
 
     - name: Build Portable Binary Payload
-      run: msbuild FoneCall.sln /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
+      run: msbuild FoneCall.sln /t:Build /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
 
     - name: Stage Local Polyform License & Third Party Notice Files
       run: |

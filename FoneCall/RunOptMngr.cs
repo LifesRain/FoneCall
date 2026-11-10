@@ -86,7 +86,7 @@ namespace FoneCall
         private void PopulateDGVs()
         {
             List<Options> args = DBC.GetArgs();
-            7int argsNum = args.Count;
+            int argsNum = args.Count;
             if (args != null && argsNum > 0)
             {
                 for (int i = 0; i < args.Count; i++)
@@ -230,7 +230,7 @@ namespace FoneCall
         {
             _displayNum++;
             e.Row.Cells[0].Value = _displayNum;
-            e.Row.Cells[1].Value = Xfer.R_arg;
+            e.Row.Cells[1].Value = "ARG";
         }
         private void DGV_CellEnter( object sender, DataGridViewCellEventArgs e )
         {
@@ -289,7 +289,7 @@ namespace FoneCall
         protected override void OnFormClosed( FormClosedEventArgs e )
         {
             base.OnFormClosed( e );
-            if (WinCtrl.IsRunningUnderUnitTests()) return;
+            if (WinCtrl.IsTesting()) return;
 
             WinCtrl.UnregisterWin( this );
         }

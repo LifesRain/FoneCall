@@ -16,14 +16,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTesting
 {
     [TestClass]
+    [DoNotParallelize]
     public class RunSCRCPYTests
     {
         private string _tempDir = string.Empty;
-        private string _dbPath = string.Empty;
+        private string _dbPath { get; set; } = string.Empty;
         private string _logPath = string.Empty;
-        private string? _originalAppDB = string.Empty;
-        private string? _originalAppLog = string.Empty;
-        private string? _originalAppData = string.Empty;
 
         [TestInitialize]
         public void TestInitialize()
@@ -34,54 +32,21 @@ namespace UnitTesting
             _dbPath = Path.Combine( _tempDir, "FoneCall.db" );
             _logPath = Path.Combine( _tempDir, "FoneCall.log" );
 
-            SQLiteConnection.CreateFile( _dbPath );
-            using (var cn = new SQLiteConnection( $"Data Source={_dbPath};Version=3;" ))
-            {
-                cn.Open();
-                using (var cmd = cn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                        CREATE TABLE IF NOT EXISTS Args (
-                            RecID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            Role TEXT,
-                            Arg TEXT,
-                            Explain TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS KVP (
-                            KVP_key TEXT PRIMARY KEY,
-                            KVP_valu TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS ExeSpec (
-                            RecID TEXT PRIMARY KEY,
-                            ScrcpyFQN TEXT,
-                            Arguments TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS StartPos (
-                            RecID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            ScreenName TEXT,
-                            FormName TEXT,
-                            Form_L INTEGER,
-                            Form_T INTEGER
-                        );
-                        ";
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            // Create an empty sqlite DB and required tables
+            DBC.InitializeTestDatabase( _dbPath );
+            // Force the DBC context to point directly to your test file
+            DBC.ConnectionStringOverride = $"Data Source={_dbPath};Version=3;";
 
-            // Backup original AppData and computed AppDB/AppLog values
-            _originalAppData = GetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField" ) as string;
-            _originalAppDB = Paths.AppDB;   // computed property -> no backing field
-            _originalAppLog = Paths.AppLog; // computed property -> no backing field
-
-            // Override AppData so the computed AppDB/AppLog reflect our temp folder.
-            SetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField", _tempDir + Path.DirectorySeparatorChar );
+            // relies on
+            // [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "UnitTesting" )]
+            // in AssemblyInfo.cs
+            Paths.AppData = _tempDir + Path.DirectorySeparatorChar;
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            if (_originalAppData != null)
-                SetBackingFieldValue( typeof( Paths ), "<AppData>k__BackingField", _originalAppData );
+            DBC.ConnectionStringOverride = null;
 
             // AppDB and AppLog are computed from AppData; restoring AppData is sufficient.
             try { if (Directory.Exists( _tempDir )) Directory.Delete( _tempDir, true ); } catch { }
@@ -160,8 +125,7 @@ namespace UnitTesting
                         {
                             cmd.CommandText = "DELETE FROM ExeSpec";
                             cmd.ExecuteNonQuery();
-                            cmd.CommandText = "INSERT INTO ExeSpec (RecID,ScrcpyFQN,Arguments) VALUES (@r,@f,@a)";
-                            var p1 = cmd.CreateParameter(); p1.ParameterName = "@r"; p1.Value = Xfer.DBaMod; cmd.Parameters.Add( p1 );
+                            cmd.CommandText = "INSERT INTO ExeSpec (ScrcpyFQN,Arguments) VALUES (@f,@a)";
                             var p2 = cmd.CreateParameter(); p2.ParameterName = "@f"; p2.Value = notepad; cmd.Parameters.Add( p2 );
                             var p3 = cmd.CreateParameter(); p3.ParameterName = "@a"; p3.Value = ""; cmd.Parameters.Add( p3 );
                             cmd.ExecuteNonQuery();
@@ -342,18 +306,6 @@ namespace UnitTesting
             } );
         }
 
-        // Reflection helpers
-        private object? GetBackingFieldValue( Type t, string fieldName )
-        {
-            var fi = t.GetField( fieldName, BindingFlags.Static | BindingFlags.NonPublic );
-            return fi?.GetValue( null );
-        }
-        private void SetBackingFieldValue( Type t, string fieldName, object value )
-        {
-            var fi = t.GetField( fieldName, BindingFlags.Static | BindingFlags.NonPublic );
-            if (fi == null) Assert.Inconclusive( $"Could not find backing field '{fieldName}' on type {t.FullName}." );
-            fi.SetValue( null, value );
-        }
         private static void SetPrivateStaticField( Type t, string name, object? value )
         {
             // Try private/static property (auto-properties are properties)
@@ -426,39 +378,39 @@ namespace UnitTesting
             return null;
         }
 
-[System.Runtime.InteropServices.DllImport("user32.dll")]
-private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-[System.Runtime.InteropServices.DllImport("user32.dll")]
-private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-[System.Runtime.InteropServices.DllImport("user32.dll")]
-[return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-private static extern bool IsWindowVisible(IntPtr hWnd);
+        [System.Runtime.InteropServices.DllImport( "user32.dll" )]
+        private static extern bool EnumWindows( EnumWindowsProc lpEnumFunc, IntPtr lParam );
+        private delegate bool EnumWindowsProc( IntPtr hWnd, IntPtr lParam );
+        [System.Runtime.InteropServices.DllImport( "user32.dll" )]
+        private static extern uint GetWindowThreadProcessId( IntPtr hWnd, out uint lpdwProcessId );
+        [System.Runtime.InteropServices.DllImport( "user32.dll" )]
+        [return: System.Runtime.InteropServices.MarshalAs( System.Runtime.InteropServices.UnmanagedType.Bool )]
+        private static extern bool IsWindowVisible( IntPtr hWnd );
 
-private static bool WaitForProcessWindow(Process p, int timeoutMs)
-{
-    var sw = System.Diagnostics.Stopwatch.StartNew();
-    while (!p.HasExited && sw.ElapsedMilliseconds < timeoutMs)
-    {
-        p.Refresh(); // keep process information current
-
-        bool found = false;
-        EnumWindows((hWnd, lParam) =>
+        private static bool WaitForProcessWindow( Process p, int timeoutMs )
         {
-            if (!IsWindowVisible(hWnd)) return true; // continue enumeration
-            GetWindowThreadProcessId(hWnd, out uint pid);
-            if (pid == (uint)p.Id)
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            while (!p.HasExited && sw.ElapsedMilliseconds < timeoutMs)
             {
-                found = true;
-                return false; // stop enumeration
-            }
-            return true; // continue
-        }, IntPtr.Zero);
+                p.Refresh(); // keep process information current
 
-        if (found) return true;
-        Thread.Sleep(200);
-    }
-    return false;
-}
+                bool found = false;
+                EnumWindows( ( hWnd, lParam ) =>
+                {
+                    if (!IsWindowVisible( hWnd )) return true; // continue enumeration
+                    GetWindowThreadProcessId( hWnd, out uint pid );
+                    if (pid == (uint)p.Id)
+                    {
+                        found = true;
+                        return false; // stop enumeration
+                    }
+                    return true; // continue
+                }, IntPtr.Zero );
+
+                if (found) return true;
+                Thread.Sleep( 200 );
+            }
+            return false;
+        }
     }
 }

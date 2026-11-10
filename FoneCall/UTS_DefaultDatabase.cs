@@ -1,7 +1,7 @@
 // CSharp FoneCall\Services\DefaultDatabase.cs
 namespace FoneCall
 {
-    public class DefaultDatabase : UTS_IDatabase
+    internal class DefaultDatabase : UTS_IDatabase
     {
         public string GetVer() => DBC.GetVer();
         public ExeSpec GetExeSpec() => DBC.GetExeSpec();

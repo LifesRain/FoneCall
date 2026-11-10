@@ -12,72 +12,57 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTesting
 {
     [TestClass]
+    [DoNotParallelize]
     public class WelcomeTests
     {
         // temp DB for tests
         private string _tempDir = string.Empty;
-        private string _dbPath = string.Empty;
+        private string _dbPath { get; set; } = string.Empty;
         private string? _originalAppData = string.Empty;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // create isolated temp folder and DB so Welcome.PopulateRTBX can read KVP.Intro
-            _tempDir = Path.Combine(Path.GetTempPath(), "FoneCallTest_Welcome_" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(_tempDir);
+            _tempDir = Path.Combine( Path.GetTempPath(), "FoneCallTest_Welcome_" + Guid.NewGuid().ToString( "N" ) );
+            Directory.CreateDirectory( _tempDir );
 
-            _dbPath = Path.Combine(_tempDir, "FoneCall.db");
-            SQLiteConnection.CreateFile(_dbPath);
+            _dbPath = Path.Combine( _tempDir, "FoneCall.db" );
+            // Create an empty sqlite DB and required tables
+            DBC.InitializeTestDatabase( _dbPath );
+            // Force the DBC context to point directly to your test file
+            DBC.ConnectionStringOverride = $"Data Source={_dbPath};Version=3;";
 
-            using (var cn = new SQLiteConnection($"Data Source={_dbPath};Version=3;"))
+
+            using (var cn = new SQLiteConnection( $"Data Source={_dbPath};Version=3;" ))
             {
                 cn.Open();
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = @"
-                        CREATE TABLE IF NOT EXISTS KVP (
-                            KVP_key TEXT PRIMARY KEY,
-                            KVP_valu TEXT
-                        );";
-                    cmd.ExecuteNonQuery();
-
                     cmd.CommandText = "INSERT OR REPLACE INTO KVP (KVP_key, KVP_valu) VALUES (@k, @v)";
-                    var p1 = cmd.CreateParameter(); p1.ParameterName = "@k"; p1.Value = KVP_Keys.Intro; cmd.Parameters.Add(p1);
+                    var p1 = cmd.CreateParameter(); p1.ParameterName = "@k"; p1.Value = KVP_Keys.Intro; cmd.Parameters.Add( p1 );
                     var p2 = cmd.CreateParameter(); p2.ParameterName = "@v";
                     // simple RTF content; PopulateRTBX will replace '##' with single quote if present
                     p2.Value = @"{\rtf1\ansi This is a test welcome RTF with ## marker.}";
-                    cmd.Parameters.Add(p2);
+                    cmd.Parameters.Add( p2 );
                     cmd.ExecuteNonQuery();
                 }
             }
 
-            // Backup and override Paths.AppData so Paths.AppDB/Paths.AppLog point to the test DB/log location
-            _originalAppData = GetBackingFieldValue(typeof(Paths), "<AppData>k__BackingField") as string;
-            SetBackingFieldValue(typeof(Paths), "<AppData>k__BackingField", _tempDir + Path.DirectorySeparatorChar);
+            // relies on
+            // [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "UnitTesting" )]
+            // in AssemblyInfo.cs
+            Paths.AppData = _tempDir + Path.DirectorySeparatorChar;
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            if (_originalAppData != null)
-                SetBackingFieldValue(typeof(Paths), "<AppData>k__BackingField", _originalAppData);
+            DBC.ConnectionStringOverride = null;
 
-            try { if (Directory.Exists(_tempDir)) Directory.Delete(_tempDir, true); } catch { }
+            try { if (Directory.Exists( _tempDir )) Directory.Delete( _tempDir, true ); } catch { }
         }
 
-        // reflection helpers for readonly backing-field manipulation
-        private object? GetBackingFieldValue(Type t, string fieldName)
-        {
-            var fi = t.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
-            return fi?.GetValue(null);
-        }
-
-        private void SetBackingFieldValue(Type t, string fieldName, object value)
-        {
-            var fi = t.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
-            if (fi == null) Assert.Inconclusive($"Could not find backing field '{fieldName}' on type {t.FullName}.");
-            fi.SetValue(null, value);
-        }
 
         // Helper to run WinForms code on STA thread and propagate exceptions/results
         private static T? RunInSta<T>( Func<T> func )
@@ -208,6 +193,17 @@ namespace UnitTesting
                 }
                 return null;
             } );
+        }
+
+        [TestMethod]
+        public void WelcomeTest_IntroKVP_ReadsIsolatedDatabase()
+        {
+            string intro = DBC.KVP_GetValu<string>( KVP_Keys.Intro );
+
+            Assert.AreEqual(
+                @"{\rtf1\ansi This is a test welcome RTF with ## marker.}",
+                intro,
+                "The Welcome test is not reading the isolated test database." );
         }
     }
 }
