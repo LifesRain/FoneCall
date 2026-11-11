@@ -1,0 +1,27 @@
+This FoneCall log contains both FoneCall & scrcpy execution messages (see sample excerpt below). Use it for troubleshooting.  The lines below beginning with "scrcpy msg:" are displayed in the UI.
+==> "RunSCRCPY" opened 11:49 - OpenForms=1: RunSCRCPY
+-> starting scrcpy execution
+	exe Dir  = D:\Computer\scrcpy-win64-v4.1
+	exe FQN  = D:\Computer\scrcpy-win64-v4.1\scrcpy.exe
+	exe Args = --shortcut-mod lctrl --always-on-top --window-height 700
+Waiting for the scrcpy phone mirroring window to appear...
+scrcpy msg: scrcpy 4.1 executable found
+* daemon not running;
+ starting now at tcp:5037
+* daemon started successfully
+scrcpy msg: INFO: ADB device found:
+scrcpy msg: INFO:--> (usb)  RZCXC00XE3R
+device  SM_A166B
+scrcpy msg: scrcpy-server: 1 file pushed,
+ 0 skipped. 601.6 MB/s
+(733706 bytes in 0.001s)
+scrcpy msg: Device: [samsung]
+ samsung SM-A166B 
+(Android 16)
+scrcpy msg: INFO: Renderer: direct3d11
+scrcpy msg: INFO: Texture: 1080x2340
+scrcpy window is ready = True
+all windows closed -- exiting FoneCall
+
+Log file size is checked when FoneCall starts and if the size exceeds 0.001 GB/1 MB (approx 28000 lines) the oldest session is deleted.
+A BIG thank you to the scrcpy developer(s). Enjoy FoneCall -- this text can be deleted.
