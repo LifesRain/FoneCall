@@ -2,11 +2,15 @@ name: Build and Release FoneCall Installer
 
 on:
   push:
-  - 'v*' # Triggers whenever a tag starting with "v" is pushed
+    tags:
+      - 'v*' # Triggers whenever a tag starting with "v" is pushed
+  workflow_dispatch: # Enables the manual "Run workflow" button in the GitHub Actions tab for testing
 
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write # Required for softprops/action-gh-release to create a draft release
 
     steps:
     - name: Checkout Code
@@ -23,10 +27,10 @@ jobs:
       run: nuget restore FoneCall.sln
 
     - name: Build Installer Binary Payload
-      run: msbuild FoneCall.sln /t:Build /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release /p:Platform="AnyCPU" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
 
     - name: Build Portable Binary Payload
-      run: msbuild FoneCall.sln /t:Build /p:Configuration=Release /p:Platform="Any CPU" /p:DefineConstants="PORTABLE" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
+      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release /p:Platform="AnyCPU" /p:DefineConstants="PORTABLE" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
 
     - name: Stage Local Polyform License & Third Party Notice Files
       run: |
@@ -75,11 +79,21 @@ jobs:
 
         Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/FoneCall_Setup.zip" -Force
         Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/FoneCall_Setup+NDP481-Web.zip" -Force
-        Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/FoneCall_Portable.zip" -Force
-        Compress-Archive -Path "dist/Option4/*" -DestinationPath "INNO/Output/FoneCall_Portable+NDP481-Web.zip" -Force
+        Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/Portable_Fonecall.zip" -Force
+        Compress-Archive -Path "dist/Option4/*" -DestinationPath "INNO/Output/Portable_Fonecall+NDP481-Web.zip" -Force
       shell: powershell
 
+    # Uploads the 4 ZIPs as downloadable workflow artifacts during manual test runs
+    - name: Upload Test Build Artifacts
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      with:
+        name: fonecall-test-packages
+        path: INNO/Output/*.zip
+
+    # Only publishes a GitHub Draft Release when triggered by an actual v* tag push
     - name: Publish All 4 Formats to GitHub Draft Release
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
       with:
         draft: true  
@@ -90,7 +104,7 @@ jobs:
         files: |
           INNO/Output/FoneCall_Setup.zip
           INNO/Output/FoneCall_Setup+NDP481-Web.zip
-          INNO/Output/FoneCall_Portable.zip
-          INNO/Output/FoneCall_Portable+NDP481-Web.zip
+          INNO/Output/Portable_Fonecall.zip
+          INNO/Output/Portable_Fonecall+NDP481-Web.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

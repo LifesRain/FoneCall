@@ -366,6 +366,8 @@ FodyWeavers.xsd
 open CMD here.cmd
 
 # Inno Setup & Installer Build Artifacts
+INNO/Output/
 INNO/FoneCall_Setup.exe
-INNO/build_iss.log
 INNO/ndp481-webinstaller.exe
+*.log
+!INNO/FoneCall.log

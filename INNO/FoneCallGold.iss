@@ -1,8 +1,6 @@
 ; /DappName
 ; /DreleaseFolder
 
-; #define appName "CustomizeMyWin10"
-; #define releaseFolder "E:\CustomizeMyWin10_Solution\Release"
 #define GitHubOrg "LifesRain"
 #define GitHubRepo "FoneCall"
 
@@ -14,24 +12,24 @@ PrivilegesRequired=Lowest
 AppCopyright=Copyright (C) 2025 its.moi@myteck.us
 DefaultDirName={autopf}\{#appName}
 DefaultGroupName={#appName}
-UninstallDisplayIcon={app}\{#appName}\{#appName}.exe
+UninstallDisplayIcon={app}\{#appName}.exe
 DisableWelcomePage=yes
 SetupIconFile="FoneCall.ico"
-AppReadmeFile=README.txt
+; AppReadmeFile=README.txt
 InfoBeforeFile=InstallCombo.rtf
 ; LicenseFile=LICENSE.rtf
 WizardStyle=dark
 Compression=lzma2
 SolidCompression=yes
-OutputDir=.\
+OutputDir=.\Output
 OutputBaseFilename={#appName}_Setup
 ArchitecturesInstallIn64BitMode=x64compatible
 SetupLogging=yes
 
 [Files]
-Source: {#releaseFolder}\*; DestDir: "{app}"; Excludes: "*.xml"; Flags: ignoreversion recursesubdirs solidbreak
-Source: "FoneCall.db"; DestDir: {localappdata}\{#appName}
-Source: "FoneCall.log"; DestDir: {localappdata}\{#appName}
+Source: "{#releaseFolder}\*"; DestDir: "{app}"; Excludes: "*.xml"; Flags: ignoreversion recursesubdirs solidbreak
+Source: "FoneCall.db"; DestDir: "{localappdata}\{#appName}"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "FoneCall.log"; DestDir: "{localappdata}\{#appName}"; Flags: onlyifdoesntexist
 
 [Run]
 Filename: "{app}\{#appName}.exe"; Description: "Launch FoneCall"; Flags: postinstall nowait skipifsilent
@@ -43,7 +41,6 @@ Name: "{group}\Uninstall {#appName}"; Filename: "{uninstallexe}"
 [Code]
 var
   SuccessState: Boolean; 
-  SponsorCheckBox: TNewCheckBox;
 
 // Robust function to check for specific .NET Framework versions via Windows Registry
 function IsDotNetInstalled(): Boolean;
@@ -74,51 +71,12 @@ begin
   end;
 end;
 
-{
-procedure InitializeWizard();
-begin
-}
-  { Create the checkbox on the Finished Page }
-  
-{
-  SponsorCheckBox := TNewCheckBox.Create(WizardForm);
-  SponsorCheckBox.Parent := WizardForm.FinishedPage;
-}
-  
-  { Align it neatly underneath the RunList container area }
-  
-{
-  SponsorCheckBox.Left := WizardForm.RunList.Left;
-  SponsorCheckBox.Width := WizardForm.RunList.Width;
-  SponsorCheckBox.Height := ScaleY(20);
-}
-  
-  { Explicitly place it safely near the bottom of the FinishedPage area }
-{
-  SponsorCheckBox.Top := WizardForm.FinishedPage.Height - ScaleY(35);
-  
-  SponsorCheckBox.Caption := '💖 Enjoying the app? Consider sponsoring the project on GitHub!';
-  SponsorCheckBox.Checked := False;
-end;
-
-procedure ChangeFinishedPageLines;
-var
-  ErrorCode: Integer;
-begin
-  if (SponsorCheckBox <> nil) and SponsorCheckBox.Checked then
-  begin
-    ShellExec('open', 'https://github.com{#GitHubOrg}', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-  end;
-end;
-}
-
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   { Trigger: Installation fully completed through all steps successfully }
   if CurStep = ssDone then
   begin
     SuccessState := True;
-    //ChangeFinishedPageLines;
   end;
 end;
 
@@ -131,7 +89,7 @@ begin
     if MsgBox('Installation failed to complete. Would you like to open our GitHub Issues page to check for a solution or report this problem?', 
               mbConfirmation, MB_YESNO) = IDYES then
     begin
-      ShellExecAsOriginalUser('open', 'https://github.com{#GitHubOrg}/{#GitHubRepo}/issues', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+      ShellExecAsOriginalUser('open', 'https://github.com/{#GitHubOrg}/{#GitHubRepo}/issues', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
     end;
   end;
 end;
