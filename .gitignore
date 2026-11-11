@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# debug help file
+open CMD here.cmd
+
+# Inno Setup & Installer Build Artifacts
+INNO/FoneCall_Setup.exe
+INNO/build_iss.log
+INNO/ndp481-webinstaller.exe
