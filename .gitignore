@@ -371,3 +371,4 @@ INNO/FoneCall_Setup.exe
 INNO/ndp481-webinstaller.exe
 *.log
 !INNO/FoneCall.log
+*.bak

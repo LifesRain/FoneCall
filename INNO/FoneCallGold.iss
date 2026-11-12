@@ -30,6 +30,8 @@ SetupLogging=yes
 Source: "{#releaseFolder}\*"; DestDir: "{app}"; Excludes: "*.xml"; Flags: ignoreversion recursesubdirs solidbreak
 Source: "FoneCall.db"; DestDir: "{localappdata}\{#appName}"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "FoneCall.log"; DestDir: "{localappdata}\{#appName}"; Flags: onlyifdoesntexist
+Source: "License.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\THIRD-PARTY-NOTICES.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 [Run]
 Filename: "{app}\{#appName}.exe"; Description: "Launch FoneCall"; Flags: postinstall nowait skipifsilent

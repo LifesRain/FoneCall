@@ -26,22 +26,20 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore FoneCall.sln
 
-    - name: Build Installer Binary Payload
-      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release /p:Platform="AnyCPU" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer"
+    - name: Build Installer Binary Payload (Release)
+      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release /p:Platform="AnyCPU" /p:PostBuildEvent="" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Installer\"
 
-    - name: Build Portable Binary Payload
-      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release /p:Platform="AnyCPU" /p:DefineConstants="PORTABLE" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable"
+    - name: Build Portable Binary Payload (Release_Portable)
+      run: msbuild FoneCall\FoneCall.csproj /t:Build /p:Configuration=Release_Portable /p:Platform="AnyCPU" /p:PostBuildEvent="" /p:SolutionDir="$($Env:GITHUB_WORKSPACE)\" /p:OutputPath="$($Env:GITHUB_WORKSPACE)\FoneCall\bin\Release\Portable\"
 
-    - name: Stage Local Polyform License & Third Party Notice Files
+    - name: Stage Licenses, Database, and Log for Portable Payload
       run: |
-        New-Item -ItemType Directory -Path "FoneCall/bin/Release/Installer" -Force
         New-Item -ItemType Directory -Path "FoneCall/bin/Release/Portable" -Force
         
-        Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Installer/LICENSE.md" -Force
         Copy-Item "INNO/LICENSE.md" -Destination "FoneCall/bin/Release/Portable/LICENSE.md" -Force
-        
-        Copy-Item "THIRD-PARTY-NOTICES.txt" -Destination "FoneCall/bin/Release/Installer/THIRD-PARTY-NOTICES.txt" -Force
         Copy-Item "THIRD-PARTY-NOTICES.txt" -Destination "FoneCall/bin/Release/Portable/THIRD-PARTY-NOTICES.txt" -Force
+        Copy-Item "INNO/FoneCall.db" -Destination "FoneCall/bin/Release/Portable/FoneCall.db" -Force
+        Copy-Item "INNO/FoneCall.log" -Destination "FoneCall/bin/Release/Portable/FoneCall.log" -Force
       shell: powershell
 
     - name: Download Microsoft .NET 4.8.1 Runtime Web Installer
@@ -52,8 +50,10 @@ jobs:
     - name: Compile Inno Setup Installer via ISCC
       run: |
         cd INNO
-        REM ISCC FoneCallGold_Spon.iss "/DappName=FoneCall" "/DreleaseFolder=%GITHUB_WORKSPACE%\FoneCall\bin\Release\Installer"
-        ISCC FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=%GITHUB_WORKSPACE%\FoneCall\bin\Release\Installer"
+        set "ISCC_EXE=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+        if exist "%ProgramFiles(x86)%\Inno Setup 7\ISCC.exe" set "ISCC_EXE=%ProgramFiles(x86)%\Inno Setup 7\ISCC.exe"
+        if exist "%ProgramFiles%\Inno Setup 7\ISCC.exe" set "ISCC_EXE=%ProgramFiles%\Inno Setup 7\ISCC.exe"
+        "%ISCC_EXE%" FoneCallGold.iss "/DappName=FoneCall" "/DreleaseFolder=%GITHUB_WORKSPACE%\FoneCall\bin\Release\Installer"
       shell: cmd
 
     - name: Assemble Packaging Matrix
@@ -63,15 +63,19 @@ jobs:
         New-Item -ItemType Directory -Path "dist/Option3" -Force
         New-Item -ItemType Directory -Path "dist/Option4" -Force
 
+        # Option 1: Standalone Gold Installer
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option1/"
 
+        # Option 2: Gold Installer + .NET 4.8.1 Web Runtime
         Copy-Item "INNO/Output/FoneCall_Setup.exe" -Destination "dist/Option2/"
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option2/"
 
+        # Option 3: Standalone Portable Folder (already includes Licenses, FoneCall.db, and FoneCall.log)
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option3/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
 
+        # Option 4: Portable Folder + .NET 4.8.1 Web Runtime
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option4/" -Recurse
         Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
