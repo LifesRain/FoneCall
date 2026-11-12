@@ -14,13 +14,13 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup NuGet
-      uses: nuget/setup-nuget@v2
+      uses: nuget/setup-nuget@v3
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v4
 
     # CRUCIAL: Fetches Dapper, SQLite, and Microsoft packages onto the clean GitHub runner
     - name: Restore NuGet Packages
@@ -90,7 +90,7 @@ jobs:
     # Uploads the 4 ZIPs as downloadable workflow artifacts during manual test runs
     - name: Upload Test Build Artifacts
       if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: fonecall-test-packages
         path: INNO/Output/*.zip
