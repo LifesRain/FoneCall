@@ -20,7 +20,7 @@ jobs:
       uses: nuget/setup-nuget@v3
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v4
+      uses: microsoft/setup-msbuild@v3
 
     # CRUCIAL: Fetches Dapper, SQLite, and Microsoft packages onto the clean GitHub runner
     - name: Restore NuGet Packages
