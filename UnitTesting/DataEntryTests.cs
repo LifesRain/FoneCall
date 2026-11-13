@@ -25,6 +25,10 @@ namespace UnitTesting
             public string I_Txt_Btn1 { get; set; } = string.Empty;
             public string I_Txt_Btn2 { get; set; } = string.Empty;
             public string I_Txt_Btn3 { get; set; } = string.Empty;
+            public string I_LinkIntroTxt { get; set; } = string.Empty;
+            public string I_LinkTxt { get; set; } = string.Empty;
+            public string I_LinkLastTxt { get; set; } = string.Empty;
+            public string I_LinkURL { get; set; } = string.Empty;
         }
 
         // Helper: create DataEntry on STA thread (WinForms requires STA)

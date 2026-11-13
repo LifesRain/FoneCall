@@ -37,6 +37,7 @@
             this.MB_BTN2 = new System.Windows.Forms.Button();
             this.MB_BTN3 = new System.Windows.Forms.Button();
             this.EndLBL = new System.Windows.Forms.Label();
+            this.LinkLBL = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.IconPB)).BeginInit();
             this.SuspendLayout();
             // 
@@ -140,12 +141,24 @@
             this.EndLBL.Text = "Domains. Possible causes include: [1] the Let\'s- Encrypt";
             this.EndLBL.Visible = false;
             // 
-            // CstmMsgBox1
+            // LinkLBL
+            // 
+            this.LinkLBL.AutoSize = true;
+            this.LinkLBL.Location = new System.Drawing.Point(0, 0);
+            this.LinkLBL.Name = "LinkLBL";
+            this.LinkLBL.Size = new System.Drawing.Size(55, 13);
+            this.LinkLBL.TabIndex = 22;
+            this.LinkLBL.TabStop = true;
+            this.LinkLBL.Text = "linkLabel1";
+            this.LinkLBL.Visible = false;
+            // 
+            // CstmMsgBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(239)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(323, 186);
+            this.Controls.Add(this.LinkLBL);
             this.Controls.Add(this.MB_BTN1);
             this.Controls.Add(this.MB_BTN2);
             this.Controls.Add(this.MB_BTN3);
@@ -155,7 +168,7 @@
             this.Controls.Add(this.MsgLBL);
             this.Controls.Add(this.IconPB);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "CstmMsgBox1";
+            this.Name = "CstmMsgBox";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LibMsgBox";
@@ -176,5 +189,6 @@
         private System.Windows.Forms.Button MB_BTN2;
         private System.Windows.Forms.Button MB_BTN3;
         private System.Windows.Forms.Label EndLBL;
+        private System.Windows.Forms.LinkLabel LinkLBL;
     }
 }

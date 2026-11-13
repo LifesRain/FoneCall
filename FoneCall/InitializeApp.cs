@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -30,49 +33,94 @@ namespace FoneCall
             // ensure InitializeTestDatabase creates correct schema and populates with test data
             //string dbFQN = @"F:\TestDB.sqlite"; 
             //DBC.InitializeTestDatabase( dbFQN );
+            //callMsgBx( null ); // for testing; simulates missing DB and data directory
 
-            _logMsgs = new StringBuilder();
-            await RunChecks( startHeader: true );
-            #region logging header
-            string filler5 = new string( '=', 5 ),
-                   ver = DBC.KVP_GetValu<string>( KVP_Keys.Version );
-            var netVer = RuntimeInformation.FrameworkDescription;
-            LogR.Norm( $"\n\n{filler5} Starting FoneCall {Xfer.RunDate} {filler5}\n" +
-                       $"WRK DIR {Directory.GetCurrentDirectory()}\n" +
-                       $"EXE DIR {Paths.AppExeDir}\n" +
-                       $"EXE FQN {Paths.AppExeFQN}\n" +
-                       $"DB File {Paths.AppDB}\n" +
-                       $"Logging {Paths.AppLog}\n" +
-                       $"scrcpy v{ver} || SQLite v{DBC.GetSQLiteVersion()} || {netVer} " );
-            #endregion
+            try
+            {
+                _logMsgs = new StringBuilder();
+                await RunChecks( startHeader: true );
+                #region logging header
+                string filler5 = new string( '=', 5 ),
+                       ver = DBC.KVP_GetValu<string>( KVP_Keys.Version );
+                var netVer = RuntimeInformation.FrameworkDescription;
+                LogR.Norm( $"\n\n{filler5} Starting FoneCall {Xfer.RunDate} {filler5}\n" +
+                           $"WRK DIR {Directory.GetCurrentDirectory()}\n" +
+                           $"EXE DIR {Paths.AppExeDir}\n" +
+                           $"EXE FQN {Paths.AppExeFQN}\n" +
+                           $"DB File {Paths.AppDB}\n" +
+                           $"Logging {Paths.AppLog}\n" +
+                           $"scrcpy v{ver} || SQLite v{DBC.GetSQLiteVersion()} || {netVer} " );
+                #endregion
 
-            LogR.Norm( _logMsgs.ToString() );
-            LogR.Norm( $"{DateTime.UtcNow} AppData path {Paths.AppData}" );
+                LogR.Norm( _logMsgs.ToString() );
+                LogR.Norm( $"{DateTime.UtcNow} AppData path {Paths.AppData}" ); // for testing; not needed in production
 
-            string[] solDir = Directory.GetFiles( Paths.SolutionData, "*", SearchOption.AllDirectories );
-            LogR.Norm( $"{DateTime.UtcNow} Solution Data path {Paths.SolutionData}\nSolution Data files:" );
-            foreach (string f in solDir) LogR.Norm( $"  {Path.GetFileName( f)}" );
+                #region testing code for development; not needed in production
+                /*
+                if (!string.IsNullOrEmpty( Paths.SolutionData ) && Directory.Exists( Paths.SolutionData ))
+                {
+                    string[] solDir = Directory.GetFiles( Paths.SolutionData, "*", SearchOption.AllDirectories );
+                    LogR.Norm( $"{DateTime.UtcNow} Solution Data path {Paths.SolutionData}\nSolution Data files:" );
+                    foreach (string f in solDir) LogR.Norm( $"  {Path.GetFileName( f )}" );
+                }
+                */
 
-            //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing
-            //DBC.ClearExeSpec(); // for testing
+                //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing start app at Welcvome screen
+                //DBC.ClearExeSpec(); // for testing sxtart app at DataEntry screen
+                // used in dev to populate DB with text and RTF file content to eliminate dependence on
+                // external files exposed on user machine when app has been installed
+                //SaveRTFtoDB(null );
+                //SaveOptsToDB( testHelpFQN: null );
+                #endregion
 
-            #region logging start state
-            string startState = DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )
-                ? "initial run post-installation; showing usage instructions"
-                : DBC.GetExeSpec() == null
-                  ? "scrcpy.exe not in DB; showing data entry"
-                  : "scrcpy.exe in DB; showing scrcpy execution";
-            LogR.Norm( $"start state: {startState}" );
-            #endregion
+                #region logging start state
+                string startState = DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )
+                    ? "initial run post-installation; showing usage instructions"
+                    : DBC.GetExeSpec() == null
+                      ? "scrcpy.exe not in DB; showing data entry"
+                      : "scrcpy.exe in DB; showing scrcpy execution";
+                LogR.Norm( $"start state: {startState}" );
+                #endregion
 
-            // used in dev to populate preloaded content in DB; left in or posterity 
-            //SaveRTFtoDB(null );
-            //SaveOptsToDB( testHelpFQN: null );
+                _cmb.I_form = null;
+                if (DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )) WinCtrl.Call_Welcome( _cmb );
+                else if (DBC.GetExeSpec() == null) WinCtrl.Call_DataEntry( _cmb );
+                else WinCtrl.Call_RunSCRCPY( _cmb, noDelay: false );
+            }
+            catch (Exception ex) { callMsgBx( ex );  }
 
-            _cmb.I_form = null;
-            if (DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )) WinCtrl.Call_Welcome( _cmb );
-            else if (DBC.GetExeSpec() == null) WinCtrl.Call_DataEntry( _cmb );
-            else WinCtrl.Call_RunSCRCPY( _cmb, noDelay: false );
+            void callMsgBx( Exception ex )
+            {
+                #region msgBox msg
+                string errsg = ex is null ? "Value cannot be null.\nParameter name: path1." : ex.Message;
+                string intro = $"FoneCall has encountered a fatal error:\n{errsg}.";
+                string hope = "If this message is a rare event the failure may be transitory.\n" +
+                             "Restarting FoneCall or  restarting your computer may solve\n" +
+                             "the issue.  Otherwise FoneCall may have become corrupted\n" +
+                             "and reinstalling might solve the problem.";
+
+                string msg = $"{intro} " +
+                            $"{Xfer.Splitter2}" +
+                            $"{hope}";
+                #endregion
+                #region MSGBOX PARAMETERS
+                string appDir = Paths.AppData.Substring( 0, Paths.AppData.LastIndexOf( '\\' ) );
+                _cmb.I_MsgType = States.Fail;
+                _cmb.I_Msg = msg;
+                _cmb.I_Txt_Btn1 = "Exit";
+                _cmb.I_LinkIntroTxt = "If the problem persists open the FoneCall log located at\n" +
+                                      $"{Paths.AppData}\n" +
+                                      $"and copy the entire log entry for this session. Combine your\n" +
+                                      $"high level system spec, Windows version and the session log.\n" +
+                                      $"Open a New Issue at ";
+                _cmb.I_LinkTxt = "FoneCall Issue";
+                _cmb.I_LinkLastTxt = " and paste as a message.";
+                _cmb.I_LinkURL = "https://github.com/LifesRain/FoneCall/issues";
+                #endregion
+                LogR.Norm( $"Startup error prevented FoneCall initialization -- exiting\n{ex}" );
+                string mbReturn = WinCtrl.CstmmMB_Call( _cmb );
+                Environment.Exit( 0 ); // no window open yet so Application.Exit fails
+            }
         }
         public static void SaveOptsToDB( string testHelpFQN )
         {
@@ -181,7 +229,7 @@ namespace FoneCall
         }
         private static async Task RunChecks( bool startHeader )
         {
-            bool dbOK = false;
+            bool dbOK = true;
             string exMsg = string.Empty;
             try
             {
@@ -192,43 +240,46 @@ namespace FoneCall
                     {
                         dbOK = await DBC.CheckDB();
                         _logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
-                        if (!dbOK) callMsgBx( noDataDir: false, caught: false, noLog: false );
+                        if (!dbOK) callMsgBx( noDataDir: false, noDB: false, noLog: false, caught: false );
                     }
-                    else callMsgBx( noDataDir: false, caught: false, noLog: false );
+                    else callMsgBx( noDataDir: false, noDB: true, noLog: false, caught: false );
 
                     if (!File.Exists( Paths.AppLog ))
-                        callMsgBx( noDataDir: false, caught: false, noLog: true );
+                        callMsgBx( noDataDir: false, noDB: false, noLog: true, caught: false );
 
                 }
-                else callMsgBx( noDataDir: true, caught: false, noLog: false );
+                else callMsgBx( noDataDir: true, noDB: false, noLog: false, caught: false );
                 #endregion
             }
             catch (Exception ex)
             {
                 exMsg = ex.Message;
-                callMsgBx( noDataDir: false, caught: true, noLog: false );
+                callMsgBx( noDataDir: false, noDB: false, noLog: false, caught: true );
             }
 
             LogSizeCheck();
 
-            void callMsgBx( bool noDataDir, bool caught, bool noLog )
+            void callMsgBx( bool noDataDir, bool noDB, bool noLog, bool caught )
             {
                 #region msgBox msg
-                string mising = noLog ? $"log file ({Paths.AppLog})"
-                                        : $"data directory ({Paths.AppData})";
-                string noFixTxt = noDataDir ? $"({mising} is missing"
-                                          : $"database ({Paths.AppDB}) is missing or corrupt";
-                string intro = noDataDir || !dbOK ? $"The FoneCall {noFixTxt}."
+                string userDir = "Your Windows User Folder\n\t..\\AppData\\Local\\FoneCall\\";
+                string mising = noLog ? $"log file\n{userDir}FoneCall.log"
+                                        : noDB ? $"database file\n{userDir}FoneCall.db"
+                                               : $"data directory\n{userDir}";
+                string failure = !dbOK ? $"{mising}\nis corrupt."
+                                          : $"{mising}\nis missing.";
+                string intro = !caught ? $"The FoneCall {failure}."
                                           : $"FoneCal encountered an error during startup: {exMsg}";
-                string hope = caught ? "If this message is a rare event the failure " +
-                             "may be transitory.  Otherwise FoneCall may have become corrupted" +
-                             "and reinstalling might solve the problem."
+                string hope = caught ? "If this message is a rare event the failure may be transitory.\n" +
+                                       "Restarting FoneCall or  restarting your computer may solve\n" +
+                                       "the issue.  Otherwise FoneCall may have become corrupted\n" +
+                                       "and reinstalling might solve the problem."
                              : noLog ? ""
-                               : "You may be able to restore it from your routine backups" +
-                                 " otherwise you will need to reinstall FoneCall.";
+                                     : "You may be able to restore it from your routine backups\n" +
+                                       " otherwise you will need to reinstall FoneCall.";
                 string action = caught ? "You can \"Restart\" or \"Exit\" FoneCall"
-                             : noLog ? "A new log will be started"
-                              : "FoneCall will now exit";
+                               : noLog ? "A new log has been started"
+                                       : "You can exit and \"Open Folder\" or just \"Exit\" FoneCall";
 
                 string msg = $"{intro} " +
                             $"{Xfer.Splitter2}" +
@@ -239,11 +290,19 @@ namespace FoneCall
                 _cmb.I_MsgType = noLog ? States.Warn : States.Fail;
                 _cmb.I_Msg = msg;
                 _cmb.I_Txt_Btn1 = noLog ? "OK" : "Exit";
-                if (caught) _cmb.I_Txt_Btn2 = "Restart";
+                if (caught || noDB || noDataDir || !dbOK) _cmb.I_Txt_Btn2 = caught? "Restart" : "Open Folder";
                 #endregion
                 string mbReturn = WinCtrl.CstmmMB_Call( _cmb );
                 if (mbReturn == "Exit" || noDataDir || !dbOK)
                 {
+                    if (mbReturn == "Open Folder")
+                    {
+                        string targetFolder = Directory.Exists( Paths.AppData )
+                                ? Paths.AppData
+                                : Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+                        LogR.Norm( $"Opening {targetFolder} in File Explorer" );
+                        Process.Start( "explorer.exe", targetFolder );
+                    }
                     LogR.Norm( "Startup error prevented FoneCall initialization -- exiting" );
                     Environment.Exit( 0 ); // no window open yet so Application.Exit fails
                 }

@@ -403,27 +403,20 @@ namespace FoneCall
         public static void Norm( string logTxt )
         {
             // Ensure directory and file exist before trying to open
-            try
-            {
-                var logDir = Path.GetDirectoryName( Paths.AppLog );
-                if (!string.IsNullOrEmpty( logDir )) Directory.CreateDirectory( logDir );
-                if (!File.Exists( Paths.AppLog )) File.WriteAllText( Paths.AppLog, string.Empty );
-            }
-            catch { /* best-effort only */ }
+            if (!Directory.Exists( Paths.AppData )) Directory.CreateDirectory( Paths.AppData );
 
             int retries = 0, maxRetries = 10;
+            // while loop to retry writing to the log file in case of temporary access issues
             while (retries < maxRetries)
             {
                 try
                 {
-                    // Source - https://stackoverflow.com/a/876513
-                    // ensure file is available
-                    using (FileStream fs = File.Open( Paths.AppLog, FileMode.Open, FileAccess.Read, FileShare.None ))
-                    { fs.Close(); }
-                    Console.WriteLine( $"{logTxt}" );
-                    _SB4log.AppendLine( $"{logTxt}" );
-                    File.AppendAllText( Paths.AppLog, $"\n{logTxt}" );
-                    _SB4log.Clear();
+                    using (FileStream fs = new FileStream( Paths.AppLog, FileMode.Append, FileAccess.Write, FileShare.Read ))
+                    using (StreamWriter sw = new StreamWriter( fs ))
+                    {
+                        Console.WriteLine( $"{logTxt}" );
+                        sw.WriteLine( $"{logTxt}" );
+                    }
                     retries = maxRetries;
                 }
                 catch (Exception)

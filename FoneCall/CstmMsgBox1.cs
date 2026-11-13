@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace FoneCall
 {
     public partial class CstmMsgBox : Form
     {
-        private static bool _hasIntro, _hasExMsg, _hasEndMsg, _needsBtn2, _needsBtn3;
+        private static bool _hasIntro, _hasExMsg, _hasLink, _hasEndMsg, _needsBtn2, _needsBtn3;
         private TableLayoutPanel _btnTLP { get; set; }
         private ICaller _mb { get; set; }
 
@@ -105,7 +106,14 @@ namespace FoneCall
                 }
             }
             #endregion
-            _btnTLP.Location = new Point( max_R - _btnTLP.Width, szgRef_BTM + 15 );
+            if (_mb.I_LinkTxt is null) _btnTLP.Location = new Point( max_R - _btnTLP.Width, szgRef_BTM + 15 );
+            else
+            {
+                _hasLink = true;
+                LinkLBL.LinkClicked += LinkLBL_LinkClicked;
+                HanddleLinks( margin, szgRef_BTM, max_R );
+            }
+
             CopyMsgLBL.Location = new Point( margin, _btnTLP.Bottom + 15 );
             ClientSize = new Size( max_R + margin, CopyMsgLBL.Bottom + margin );
             //Click2CopyLBL.Location = new Point(max_R - _btnTLP.Width, _btnTLP.Bottom + 15);
@@ -170,6 +178,15 @@ namespace FoneCall
             }
             foreach (var lbl in Controls.OfType<Label>()) if (lbl.Name.Contains( "bord_" )) lbl.BringToFront();
         }
+        private void HanddleLinks( int margin, int szgRef_BTM, int max_R )
+        {
+            int linkStart = _mb.I_LinkIntroTxt.Length, linkLen = _mb.I_LinkTxt.Length;
+            LinkLBL.Text = $"{_mb.I_LinkIntroTxt}{_mb.I_LinkTxt}{_mb.I_LinkLastTxt}";
+            LinkLBL.LinkArea = new LinkArea( linkStart, linkLen );
+            LinkLBL.Visible = true;
+            LinkLBL.Location = new Point( margin, szgRef_BTM + 15 );
+            _btnTLP.Location = new Point( max_R - _btnTLP.Width, LinkLBL.Bottom + 15 );
+        }
         private void CopyContent()
         {
             int txtLen;
@@ -183,6 +200,8 @@ namespace FoneCall
             if (_hasIntro) sb.AppendLine( MsgLBL.Text );
             if (_hasExMsg) sb.AppendLine( ExMsgLBL.Text );
             if (_hasEndMsg) sb.AppendLine( EndLBL.Text );
+            if (_hasLink) sb.AppendLine( $"\n{_mb.I_LinkIntroTxt}{_mb.I_LinkTxt}" +
+                                         $"{_mb.I_LinkLastTxt}\n{_mb.I_LinkURL}" );
             string opts = _mb.I_Txt_Btn3 != null ? $"Options: {MB_BTN3.Text} {MB_BTN2.Text} {MB_BTN1.Text}"
                           : _mb.I_Txt_Btn2 != null ? $"Options: {MB_BTN2.Text} {MB_BTN1.Text}" : $"Option: {MB_BTN1.Text}";
             txtLen = opts.Length;
@@ -197,6 +216,10 @@ namespace FoneCall
             Button btn = (Button)sender;
             MBreturn = btn.Text;
             Close();
+        }
+        private void LinkLBL_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            Process.Start( _mb.I_LinkURL );
         }
         protected override void OnFormClosed( FormClosedEventArgs e )
         {

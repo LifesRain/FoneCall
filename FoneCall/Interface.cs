@@ -11,6 +11,10 @@ namespace FoneCall
         string I_Txt_Btn1 { get; set; }
         string I_Txt_Btn2 { get; set; }
         string I_Txt_Btn3 { get; set; }
+        string I_LinkIntroTxt { get; set; }
+        string I_LinkTxt { get; set; }
+        string I_LinkLastTxt { get; set; }
+        string I_LinkURL { get; set; }
     }
     public class MsgBoxImplement : Form, ICaller
     {
@@ -21,5 +25,9 @@ namespace FoneCall
         public string I_Txt_Btn1 { get; set; }
         public string I_Txt_Btn2 { get; set; }
         public string I_Txt_Btn3 { get; set; }
+        public string I_LinkIntroTxt { get; set; }
+        public string I_LinkTxt { get; set; }
+        public string I_LinkLastTxt { get; set; }
+        public string I_LinkURL { get; set; }
     }
 }
