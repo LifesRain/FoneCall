@@ -7,7 +7,7 @@
 [Setup]
 AppId={{5A5902CD-5640-45B1-A83A-BD1553920EA2}
 AppName={#appName}
-AppVersion=1.0
+AppVersion=1.0.0
 PrivilegesRequired=Lowest
 AppCopyright=Copyright (C) 2025 its.moi@myteck.us
 DefaultDirName={autopf}\{#appName}
