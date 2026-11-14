@@ -6,7 +6,7 @@ FoneCall features a fully transparent development process with a public codebase
 
 *   ***The Root Cause:*** Windows SmartScreen makes no distinction between truly well known sources—such as GitHub—and other sources. 
 
-    When you use the default Windows File Explorer to extract a ZIP file, it automatically propagates an internet tracking tag—called *Mark of the Web* (MotW)—to every single file extracted from the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
+    When you use the default Windows File Explorer to extract a downloaded ZIP file, Windows automatically propagates an internet tracking tag—called *Mark of the Web* (MotW)—to every single file extracted from the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
 
   * ***The Solution:*** To avoid the unnecessary warning use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
 
@@ -21,9 +21,9 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
 
 
-|Download File Name|Description|
+|Download File Name|.zip File Contents|
 |----|----|
-| FoneCall_Setup.zip|FoneCall installer executable[^1]|
+| FoneCall_Setup.zip|FoneCall_Setup (the installer executable[^1])|
 | FoneCall_Setup+NDP481-Web.zip|FoneCall_Setup and NDP481-Web[^2] executables|
 | FoneCall_Portable.zip|FoneCall [binaries](https://www.google.com/search?q=what+are+application+binaries) containing the FoneCall_Portable.exe and required supporting files.  Unzip while retaining folder structure.|
 | FoneCall_Portable+NDP481-Web.zip| FoneCall binaries zip file and NDP481-Web[^2] executable|
@@ -33,6 +33,6 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 
 
 
-Return to the FoneCall [README](README.md) for more information on the tool, its features, and installation instructions.
+Return to the FoneCall [README](README.md) for more information on the tool or proceed to our repository's **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
 
 

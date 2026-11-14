@@ -49,7 +49,7 @@ Whether you've installed numerous applications or this is your first time, we st
 
 ### 1. Download FoneCall
 
-Get the latest installation package directly from our repository **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
+Get the latest installation package directly from  our repository **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
 
 
 ### 2. Basic Setup Steps
@@ -59,6 +59,31 @@ Get the latest installation package directly from our repository **[Latest Relea
 2. Review the [Installation Guide & Caveats](InstallGuide.md) for important information about the installation process.
 3. Run the FoneCall installer and follow the desktop setup prompts.
 4. Launch FoneCall, configure your preferred arguments, and pin the app to your Taskbar or Start Menu for one-click access.
+
+### Verify Your Download (Optional)
+
+GitHub automatically generates a cryptographic **SHA-256 checksum** for every release file so you can confirm your download was not corrupted or tampered with.
+
+#### Quick PowerShell Verification (Recommended)
+
+1. Open **PowerShell** in the folder where you saved your downloaded `.zip` file (right-click inside the folder while holding **Shift** and select **Open PowerShell window here**, or **Open in Terminal**).
+2. Run the following command (replace `FoneCall_Setup.zip` with the exact filename you downloaded if you chose a different package):
+
+For example, if you downloaded `FoneCall_Setup.zip`, run:
+```powershell
+$f = "FoneCall_Setup.zip"; $a = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.1").assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: File matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch!" -ForegroundColor Red }
+
+```
+
+
+
+### Manual Verification
+
+If you prefer not to run an API command, you can compare the hash manually:
+
+1. Run `Get-FileHash .\FoneCall_Setup.zip -Algorithm SHA256` in PowerShell to display your local file's hash.
+2. Compare that string against the **sha256** badge listed next to the file under **Assets** on the [FoneCall Latest Releases](https://github.com) page.
+
 
 ---
 
