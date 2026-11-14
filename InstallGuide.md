@@ -31,8 +31,27 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 [^1]: Setup makes the Registry entries to add FoneCall to the Start Menu and  support application add/uninstall.  No other modifications to the Registry are made
 [^2]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
 
+#### Download Integreity Verification
+Both "scripted" and manual verification is performed using `PowerShell` on your computer.  The script automatically retrieves the GitHub generated checksum key and compares it to the one associated with the downloaded file.
+
+For the manual approach first copy the **sha256** badge listed next to the file under **Assets**  and the appropriate PowerShell command.  Manually compare the output of the command to the copied key.
+
+In both cases open PowerShell and change directory (cd ) to the folder where you saved your downloaded `.zip` file.  Then run the appropriate command as described below.
+
+##### Automation "One-Liner" Scripts
+
+***`FoneCall_Setup.zip`***
+```powershell
+$f = "FoneCall_Setup.zip"; $a = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.1").assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: File matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch!" -ForegroundColor Red }
+```
+
+##### Manual Command for Verification
+
+***`FoneCall_Setup.zip`***
+```powershell
+Get-FileHash .\FoneCall_Setup.zip -Algorithm SHA256`
+```
+---
 
 
 Return to the FoneCall [README](README.md) for more information on the tool or proceed to our repository's **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
-
-
