@@ -81,10 +81,10 @@ jobs:
         Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option4/"
 
-        Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/FoneCall_Setup.zip" -Force
-        Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/FoneCall_Setup+NDP481-Web.zip" -Force
-        Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/Portable_Fonecall.zip" -Force
-        Compress-Archive -Path "dist/Option4/*" -DestinationPath "INNO/Output/Portable_Fonecall+NDP481-Web.zip" -Force
+        Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/1-FoneCall_Setup.zip" -Force
+        Compress-Archive -Path "dist/Option2/*" -DestinationPath "INNO/Output/2-FoneCall_Setup_and_NDP481-Web.zip" -Force
+        Compress-Archive -Path "dist/Option3/*" -DestinationPath "INNO/Output/3-Portable_Fonecall.zip" -Force
+        Compress-Archive -Path "dist/Option4/*" -DestinationPath "INNO/Output/4-Portable_Fonecall_and_NDP481-Web.zip" -Force
       shell: powershell
 
     # Uploads the 4 ZIPs as downloadable workflow artifacts during manual test runs
@@ -103,12 +103,13 @@ jobs:
         prerelease: true
         generate_release_notes: true 
         body: |
-          Have you reviewed the [Installation Guide](https://github.com/LifesRain/FoneCall/blob/master/InstallGuide.md) which explains how to avoid the Windows SmartScreen?
+          Have you reviewed the [Installation Guide](https://github.com/LifesRain/FoneCall/blob/master/InstallGuide.md) which describes Windows SmartScreen avoidance and provides checsumm scripts?
         append_body: true 
         files: |
-          INNO/Output/FoneCall_Setup.zip
-          INNO/Output/FoneCall_Setup+NDP481-Web.zip
-          INNO/Output/Portable_Fonecall.zip
-          INNO/Output/Portable_Fonecall+NDP481-Web.zip
+          INNO/Output/1-FoneCall_Setup.zip
+          INNO/Output/2-FoneCall_Setup_and_NDP481-Web.zip
+          INNO/Output/3-Portable_Fonecall.zip
+          INNO/Output/4-Portable_Fonecall_and_NDP481-Web.zip
+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

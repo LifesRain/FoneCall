@@ -23,33 +23,35 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 
 |Download File Name|.zip File Contents|
 |----|----|
-| FoneCall_Setup.zip|FoneCall_Setup (the installer executable[^1])|
-| FoneCall_Setup+NDP481-Web.zip|FoneCall_Setup and NDP481-Web[^2] executables|
-| FoneCall_Portable.zip|FoneCall [binaries](https://www.google.com/search?q=what+are+application+binaries) containing the FoneCall_Portable.exe and required supporting files.  Unzip while retaining folder structure.|
-| FoneCall_Portable+NDP481-Web.zip| FoneCall binaries zip file and NDP481-Web[^2] executable|
+| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] |
+| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables |
+| [3-Portable_Fonecall.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/3-Portable_Fonecall.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
+| [4-Portable_Fonecall_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/4-Portable_Fonecall_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable |
 
-[^1]: Setup makes the Registry entries to add FoneCall to the Start Menu and  support application add/uninstall.  No other modifications to the Registry are made
+
+[^1]: Setup creates the Registry entries required to add FoneCall to the Start Menu and register it with Windows Apps & features for easy uninstallation. No other modifications to the Registry are made.
 [^2]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
 
-#### Download Integreity Verification
-Both "scripted" and manual verification is performed using `PowerShell` on your computer.  The script automatically retrieves the GitHub generated checksum key and compares it to the one associated with the downloaded file.
+#### Download Integrity Verification
+Both "scripted" and manual verification are performed using `PowerShell` on your computer. The script automatically retrieves the GitHub generated checksum key and compares it to the key associated with the downloaded file.
 
-For the manual approach first copy the **sha256** badge listed next to the file under **Assets**  and the appropriate PowerShell command.  Manually compare the output of the command to the copied key.
+For the manual approach first copy the **sha256** badge listed next to the file under **Assets** and the PowerShell command. Manually compare the output of the command to the copied key.
 
-In both cases open PowerShell and change directory (cd ) to the folder where you saved your downloaded `.zip` file.  Then run the appropriate command as described below.
+In both cases open PowerShell and change directory (cd ) to the folder where you saved your downloaded `.zip` file(s).  Then run the appropriate command as described below.
 
-##### Automation "One-Liner" Scripts
+##### Automated "One-Liner" Script
 
-***`FoneCall_Setup.zip`***
+***`Requires internet connection`***
 ```powershell
-$f = "FoneCall_Setup.zip"; $a = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.1").assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: File matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch!" -ForegroundColor Red }
+$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-Portable_Fonecall.zip','4-Portable_Fonecall_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.1").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
 ```
 
 ##### Manual Command for Verification
 
-***`FoneCall_Setup.zip`***
+***`Can be run locally after downloading`***
 ```powershell
-Get-FileHash .\FoneCall_Setup.zip -Algorithm SHA256`
+Get-FileHash .\*FoneCall*.zip -Algorithm SHA256 | Select-Object @{Name="File";Expression={Split-Path $_.Path -Leaf}}, Hash
+
 ```
 ---
 
