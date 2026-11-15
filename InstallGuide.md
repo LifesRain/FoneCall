@@ -23,10 +23,10 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 
 |Download File Name|.zip File Contents|
 |----|----|
-| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] |
-| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables |
-| [3-Portable_Fonecall.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/3-Portable_Fonecall.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
-| [4-Portable_Fonecall_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.1/4-Portable_Fonecall_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable |
+| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] |
+| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables |
+| [3-Portable_Fonecall.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/3-Portable_Fonecall.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
+| [4-Portable_Fonecall_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-Portable_Fonecall_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable |
 
 
 [^1]: Setup creates the Registry entries required to add FoneCall to the Start Menu and register it with Windows Apps & features for easy uninstallation. No other modifications to the Registry are made.
@@ -43,7 +43,7 @@ In both cases open PowerShell and change directory (cd ) to the folder where you
 
 ***`Requires internet connection`***
 ```powershell
-$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-Portable_Fonecall.zip','4-Portable_Fonecall_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.1").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
+$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-Portable_Fonecall.zip','4-Portable_Fonecall_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.2").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
 ```
 
 ##### Manual Command for Verification
