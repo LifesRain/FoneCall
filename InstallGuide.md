@@ -10,15 +10,17 @@ FoneCall features a fully transparent development process with a public codebase
 
   * ***The Solution:*** To avoid the unnecessary warning use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
 
-    Using third-party tools like 7-Zip or WinRAR safely typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
+    Using third-party tools like 7-Zip or WinRAR typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
+
 
 For details on our security architecture, see our [Security Policy](SECURITY.md).
 
 > [!IMPORTANT]
 > **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip.
 
-#### If you still see the Windows SmartScreen warning, follow these steps to bypass it:
-![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
+#### If you still see the Windows SmartScreen warning,
+...see footnotes[^3] ...
+[^3]: ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
 
 
 |Download File Name|.zip File Contents|
