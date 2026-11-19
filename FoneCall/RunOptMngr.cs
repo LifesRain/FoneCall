@@ -60,7 +60,7 @@ namespace FoneCall
             DGV.DefaultValuesNeeded += DGV_DefaultValuesNeeded;
             DGV.CellEnter += DGV_CellEnter;
 
-            SaveBTN.Click += SaveBTN_Click;
+            SaveBTN.Click += SaveBTN_ClickTC;
             CloseBTN.Click += CancelBTN_Click;
             ReleasesLINK.LinkClicked += Releases_LinkClicked;
         }
@@ -260,27 +260,57 @@ namespace FoneCall
             string url = "https://github.com/Genymobile/scrcpy/releases";
             Process.Start( new ProcessStartInfo( url ) { UseShellExecute = true } );
         }
-        private void SaveBTN_Click( object sender, EventArgs e )
+        private void SaveBTN_ClickTC( object sender, EventArgs e )
         {
+            // uses transactional save to avoid partial saves/use built-in Rollback() if an error occurs*
             CloseBTN.Text = "Close";
-            DBC.ClearArgs();
+            var optionsToSave = new List<Options>();
+
             // col_0 = rowNum, col_1 = role, col_2 = arg, col_3 = explain;
-            // rowNum not saved to DB, but used to display the row number in the DGV
             foreach (DataGridViewRow row in DGV.Rows)
             {
+                if (row.IsNewRow) continue; // Prevents processing the empty trailing DGV row
+
                 object cellObj_1 = row.Cells[1].Value,
                        cellObj_2 = row.Cells[2].Value;
                 if (cellObj_1 == null && cellObj_2 == null) continue;
 
                 object cellObj_3 = row.Cells[3].Value;
-                string r = cellObj_1 as string ?? null,
-                       o = cellObj_2 as string ?? null,
-                       exp = cellObj_3 as string ?? null;
+                string r = cellObj_1 as string,
+                       o = cellObj_2 as string,
+                       d = cellObj_3 as string;
 
-                Options args = exp is null
-                       ? new Options { Role = r, Option = o } : new Options { Role = r, Option = o, Desc = exp };
-                DBC.SaveArgs( args );
+                Options args = d is null
+                       ? new Options { Role = r, Option = o }
+                       : new Options { Role = r, Option = o, Desc = d };
+
+                optionsToSave.Add( args );
             }
+
+            var existingOptions = DBC.GetArgs();
+
+            foreach (var item in optionsToSave)
+            {
+                var match = existingOptions.FirstOrDefault( x =>
+                    string.Equals( x.Role?.Trim(), item.Role?.Trim(), StringComparison.OrdinalIgnoreCase ) &&
+                    string.Equals( x.Option?.Trim(), item.Option?.Trim(), StringComparison.OrdinalIgnoreCase ) );
+
+                if (match != null)
+                {
+                    item.Used = match.Used;
+                }
+            }
+
+            try
+            {
+                // Replace with your actual INSERT statement from DBC.SaveArgs
+                DBC.ReplaceAllOptions( optionsToSave );
+            }
+            catch (Exception)
+            {
+                MessageBox.Show( "Failed to save options. No changes were made to the database." );
+            }
+            Close();
         }
         private void CancelBTN_Click( object sender, EventArgs e )
         {

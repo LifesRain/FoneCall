@@ -63,6 +63,12 @@ namespace FoneCall
                     LogR.Norm( $"{DateTime.UtcNow} Solution Data path {Paths.SolutionData}\nSolution Data files:" );
                     foreach (string f in solDir) LogR.Norm( $"  {Path.GetFileName( f )}" );
                 }
+
+                string sqlc = @"
+                SELECT sql FROM sqlite_schema WHERE type = 'table' AND sql IS NOT NULL
+                AND name NOT LIKE 'sqlite_%' ORDER BY name;";
+                var tbls = DBC.TypedList<string>( sqlc );
+                foreach (var sql in tbls) LogR.Norm( sql );
                 */
 
                 //DBC.UpdateKVP( KVP_Keys.FirstRun, "true" ); // for testing start app at Welcvome screen
@@ -81,6 +87,7 @@ namespace FoneCall
                       : "scrcpy.exe in DB; showing scrcpy execution";
                 LogR.Norm( $"start state: {startState}" );
                 #endregion
+
 
                 _cmb.I_form = null;
                 if (DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun )) WinCtrl.Call_Welcome( _cmb );

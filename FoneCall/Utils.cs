@@ -125,15 +125,38 @@ namespace FoneCall
                 return new SQLiteConnection( ConnectionStringOverride );
             }
 
-            var csb = new SQLiteConnectionStringBuilder
-            {
-                DataSource = Paths.AppDB,
-                Version = 3,
-                FailIfMissing = true,
-            };
-            return new SQLiteConnection( csb.ConnectionString );
+            return new SQLiteConnection( $"Data Source={Paths.AppDB};Version=3;FailIfMissing = true;" );
         }
 
+        public static void ReplaceAllOptions( IEnumerable<Options> optionsList )
+        {
+            string selectUsedSql = $"SELECT Role, Option, Used FROM {TBL.Options}";
+            string deleteSql = $"DELETE FROM {TBL.Options}";
+            string insertSql = $"INSERT INTO {TBL.Options} ( Role, Used, Option, Desc ) " +
+                                   $"VALUES ( @Role, @Used, @Option, @Desc )";
+
+            using (var dbc = SQLyt())
+            {
+                dbc.Open();
+                using (var transaction = dbc.BeginTransaction())
+                {
+                    try
+                    {
+                        // 3. Clear and re-insert atomically
+                        dbc.Execute( deleteSql, transaction: transaction );
+                        dbc.Execute( insertSql, optionsList, transaction: transaction );
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        LogR.Norm( $"{ex}" );
+                        throw;
+                    }
+                }
+            }
+        }
         public static void InitializeTestDatabase( string dbPath )
         {
             // theere is native condition that could triggger use of corrrectt source db duriing unit tests,
@@ -163,12 +186,8 @@ namespace FoneCall
                 using (var command = source.CreateCommand())
                 {
                     command.CommandText = @"
-                SELECT sql
-                FROM sqlite_master
-                WHERE type = 'table'
-                  AND sql IS NOT NULL
-                  AND name NOT LIKE 'sqlite_%'
-                ORDER BY name;";
+                SELECT sql FROM sqlite_schema WHERE type = 'table' AND sql IS NOT NULL
+                AND name NOT LIKE 'sqlite_%' ORDER BY name;";
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -192,17 +211,12 @@ namespace FoneCall
                 }
             }
         }
-        public static Task<bool> CheckDB()
-        {
-            bool dbOK = false;
-            if (!File.Exists( Paths.AppDB )) return Task.FromResult( dbOK );
-            dbOK = OneT_Valu<string>( "PRAGMA integrity_check" ) != null;
-
-            return Task.FromResult( dbOK );
-        }
         private static void JustSQL( string sql )
         {
-            try { using (var dbc = new SQLiteConnection( SQLyt() )) dbc.Execute( sql ); }
+            try 
+            { 
+                using (var dbc = SQLyt()) dbc.Execute( sql ); 
+            }
             catch (SqlException ex) { LogR.Norm( $"{ex}" ); }
             catch (Exception ex) { LogR.Norm( $"{ex}" ); }
         }
@@ -210,8 +224,7 @@ namespace FoneCall
         {
             try
             {
-                using (var dbc = new SQLiteConnection( SQLyt() ))
-                    dbc.Execute( sql, (T)model );
+                using (var dbc = SQLyt()) dbc.Execute( sql, (T)model );
             }
             catch (SqlException ex) { LogR.Norm( $"{ex}" ); throw; }
             catch (Exception ex) { LogR.Norm( $"{ex}" ); }
@@ -221,8 +234,7 @@ namespace FoneCall
             T rtrn = default( T );
             try
             {
-                using (var dbc = new SQLiteConnection( SQLyt() ))
-                    rtrn = dbc.QuerySingleOrDefault<T>( sql );
+                using (var dbc = SQLyt()) rtrn = dbc.QuerySingleOrDefault<T>( sql );
 
             }
             catch (SqlException ex) { LogR.Norm( $"{ex}" ); }
@@ -235,21 +247,19 @@ namespace FoneCall
             List<T> listRtrn = null;
             try
             {
-                using (var dbc = new SQLiteConnection( SQLyt() ))
-                    listRtrn = dbc.Query<T>( sql ).ToList();
+                using (var dbc = SQLyt()) listRtrn = dbc.Query<T>( sql ).ToList(); 
             }
             catch (SqlException ex) { LogR.Norm( $"{ex}" ); }
             catch (Exception ex) { LogR.Norm( $"{ex}" ); }
 
             return listRtrn ?? new List<T>();
         }
-        private static T OneT_Valu<T>( string sql )
+        internal static T OneT_Valu<T>( string sql )
         {
             T scalarValue = default( T );
             try
             {
-                using (var dbc = new SQLiteConnection( SQLyt() ))
-                    scalarValue = dbc.ExecuteScalar<T>( sql );
+                using (var dbc = SQLyt()) scalarValue = dbc.ExecuteScalar<T>( sql );
 
                 // Fix: Only check ToLower if scalarValue is string, and use default(T) instead of null for generic type
                 if (scalarValue is string strValue && !string.IsNullOrEmpty( strValue ) && strValue.ToLower().Contains( "null" ))
@@ -262,6 +272,14 @@ namespace FoneCall
         }
 
         public static string GetSQLiteVersion() { return OneT_Valu<string>( "SELECT sqlite_version() " ); }
+        public static Task<bool> CheckDB()
+        {
+            bool dbOK = false;
+            if (!File.Exists( Paths.AppDB )) return Task.FromResult( dbOK );
+            dbOK = OneT_Valu<string>( "PRAGMA integrity_check" ) != null;
+
+            return Task.FromResult( dbOK );
+        }
         public static void SaveKVP( KVP kvp )
         {
             // using parameterized avoids SQLite injection and
@@ -273,7 +291,7 @@ namespace FoneCall
         public static T KVP_GetValu<T>( string key )
         {
             string sql = $"SELECT KVP_valu FROM {TBL.KVP} WHERE KVP_KEY='{key}' ";
-            var t_Valu = OneT_Valu<T>( sql );
+            T t_Valu = OneT_Valu<T>( sql );
             return t_Valu;
         }
         public static void UpdateKVP( string key, string state )

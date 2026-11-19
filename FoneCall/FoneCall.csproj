@@ -76,6 +76,7 @@
     <Compile Include="DataEntry.Designer.cs">
       <DependentUpon>DataEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="MiigrateDB.cs" />
     <Compile Include="UTS_*DefaultDatabase.cs" />
     <Compile Include="UTS_DefaultFileSystem.cs" />
     <Compile Include="UTS_DefaultStyles.cs" />
