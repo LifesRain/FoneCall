@@ -245,6 +245,7 @@ namespace FoneCall
                 {
                     if (File.Exists( Paths.AppDB ))
                     {
+                        MiigrateDB.MigrateChk();
                         dbOK = await DBC.CheckDB();
                         _logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
                         if (!dbOK) callMsgBx( noDataDir: false, noDB: false, noLog: false, caught: false );
