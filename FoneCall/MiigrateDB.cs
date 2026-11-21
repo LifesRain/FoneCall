@@ -1,4 +1,11 @@
-﻿using System;
+﻿// FoneCall, a scrcpy UI. Copyright (c) 2026 Lifesain
+// Licensed under the PolyForm Noncommercial License 1.0.0.
+// You may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//     <https://polyformproject.org/licenses/noncommercial/1.0.0>
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
@@ -14,8 +21,9 @@ namespace FoneCall
     {
         private const int LatestSchemaVersion = 1;
 
-        public static void MigrateChk()
+        public static bool MigrateChk()
         {
+            bool migrated = false;
             using (var connection = DBC.SQLyt())
             {
                 connection.Open();
@@ -23,7 +31,7 @@ namespace FoneCall
                 int currentVersion = connection.ExecuteScalar<int>( "PRAGMA user_version;" );
 
                 if (currentVersion >= LatestSchemaVersion)
-                    return;
+                    return migrated;
 
                 // Create a timestamped backup before modifying the user's database
                 if (File.Exists( Paths.AppDB ))
@@ -41,6 +49,8 @@ namespace FoneCall
                         {
                             ApplyVersion1( connection, transaction );
                             connection.Execute( "PRAGMA user_version = 1;", transaction: transaction );
+                            LogR.Norm( $"Database migrated to version 1." );
+                            migrated = true;
                         }
 
                         transaction.Commit();
@@ -52,6 +62,7 @@ namespace FoneCall
                     }
                 }
             }
+            return migrated;
         }
 
         private static void ApplyVersion1( SQLiteConnection conn, SQLiteTransaction tx )

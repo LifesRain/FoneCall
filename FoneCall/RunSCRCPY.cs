@@ -1,4 +1,11 @@
-﻿using System;
+﻿// FoneCall, a scrcpy UI. Copyright (c) 2026 Lifesain
+// Licensed under the PolyForm Noncommercial License 1.0.0.
+// You may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//     <https://polyformproject.org/licenses/noncommercial/1.0.0>
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -44,6 +51,8 @@ namespace FoneCall
             I_form = this;
             VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
             WinCtrl.RegisterWin( this );
+
+            if (_caller.I_migrated) MigrateLBL.Visible = true;
 
             InitEventHandlers();
             AdjustForm();

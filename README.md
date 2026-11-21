@@ -35,7 +35,7 @@ The [FoneCall Walkthrough](FoneCallWalkthru.md) shows and describes the tool's i
 > ⚠️ **Installation Notice:** FoneCall will fail to install if your system lacks .NET Framework 4.8 or higher.
 
 ### Dependency Configuration
-**scrcpy Requirement:** FoneCall functions strictly as a user interface wrapper and only runs as intended if the complete scrcpy package is accessable.  If you do not have the official scrcpy package, it can be downloaded from the [official scrcpy project page](https://github.com/Genymobile/scrcpy).
+**scrcpy Requirement:** FoneCall functions strictly as a user interface wrapper and only runs as intended if the complete scrcpy package is accessable.  If you do not have the official scrcpy package, it can be downloaded from the [official scrcpy project page](https://github.com/Genymobile/scrcpy/releases).
 
 
 

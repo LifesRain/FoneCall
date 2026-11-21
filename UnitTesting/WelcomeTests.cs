@@ -1,3 +1,10 @@
+// FoneCall, a scrcpy UI. Copyright (c) 2026 Lifesain
+// Licensed under the PolyForm Noncommercial License 1.0.0.
+// You may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//     <https://polyformproject.org/licenses/noncommercial/1.0.0>
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
 using System;
 using System.Data.SQLite;
 using System.IO;
@@ -15,6 +22,23 @@ namespace UnitTesting
     [DoNotParallelize]
     public class WelcomeTests
     {
+        // Minimal ICaller test double
+        private class FakeCaller : ICaller
+        {
+            public Form I_form { get; set; } = new Form();
+            public string I_MBcaller { get; set; } = string.Empty;
+            public string I_MsgType { get; set; } = string.Empty;
+            public string I_Msg { get; set; } = string.Empty;
+            public string I_Txt_Btn1 { get; set; } = string.Empty;
+            public string I_Txt_Btn2 { get; set; } = string.Empty;
+            public string I_Txt_Btn3 { get; set; } = string.Empty;
+            public string I_LinkIntroTxt { get; set; } = string.Empty;
+            public string I_LinkTxt { get; set; } = string.Empty;
+            public string I_LinkLastTxt { get; set; } = string.Empty;
+            public string I_LinkURL { get; set; } = string.Empty;
+            public bool I_migrated { get; set; } = false;
+        }
+
         // temp DB for tests
         private string _tempDir = string.Empty;
         private string _dbPath { get; set; } = string.Empty;
@@ -94,7 +118,8 @@ namespace UnitTesting
         {
             RunInSta<object?>( () =>
             {
-                Welcome form = new Welcome();
+                var passThru = new FakeCaller();
+                Welcome form = new Welcome( caller: passThru );
                 try
                 {
                     var t = form.GetType();
@@ -137,7 +162,8 @@ namespace UnitTesting
         {
             RunInSta<object?>( () =>
             {
-                var form = new Welcome();
+                var passThru = new FakeCaller();
+                var form = new Welcome( caller: passThru );
                 try
                 {
                     var t = form.GetType();
@@ -169,7 +195,8 @@ namespace UnitTesting
         {
             RunInSta<object?>( () =>
             {
-                var form = new Welcome();
+                var passThru = new FakeCaller();
+                var form = new Welcome( caller: passThru );
                 try
                 {
                     var t = form.GetType();

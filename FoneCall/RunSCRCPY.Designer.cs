@@ -39,6 +39,7 @@
             this.StartNowLBL = new System.Windows.Forms.Label();
             this.CountDownLBL = new System.Windows.Forms.Label();
             this.MsgTitleLBL = new System.Windows.Forms.Label();
+            this.MigrateLBL = new System.Windows.Forms.Label();
             this.WinCtrlPNL.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CloseWinPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinWinPB)).BeginInit();
@@ -163,12 +164,26 @@
             this.MsgTitleLBL.Text = "Starting scrcpy in";
             this.MsgTitleLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // MigrateLBL
+            // 
+            this.MigrateLBL.AutoSize = true;
+            this.MigrateLBL.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.MigrateLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MigrateLBL.ForeColor = System.Drawing.Color.Black;
+            this.MigrateLBL.Location = new System.Drawing.Point(36, 63);
+            this.MigrateLBL.MaximumSize = new System.Drawing.Size(328, 0);
+            this.MigrateLBL.Name = "MigrateLBL";
+            this.MigrateLBL.Size = new System.Drawing.Size(172, 24);
+            this.MigrateLBL.TabIndex = 1212;
+            this.MigrateLBL.Text = "The FoneCall DB has been upgraded.\r\nYour usser settings are not changed.";
+            // 
             // RunSCRCPY
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(87)))), ((int)(((byte)(79)))));
             this.ClientSize = new System.Drawing.Size(244, 161);
+            this.Controls.Add(this.MigrateLBL);
             this.Controls.Add(this.MsgTitleLBL);
             this.Controls.Add(this.CountDownLBL);
             this.Controls.Add(this.StartNowLBL);
@@ -201,5 +216,6 @@
         private System.Windows.Forms.Label StartNowLBL;
         private System.Windows.Forms.Label CountDownLBL;
         private System.Windows.Forms.Label MsgTitleLBL;
+        private System.Windows.Forms.Label MigrateLBL;
     }
 }

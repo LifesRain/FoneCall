@@ -1,4 +1,11 @@
-﻿using System;
+﻿// FoneCall, a scrcpy UI. Copyright (c) 2026 Lifesain
+// Licensed under the PolyForm Noncommercial License 1.0.0.
+// You may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//     <https://polyformproject.org/licenses/noncommercial/1.0.0>
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -245,10 +252,18 @@ namespace FoneCall
                 {
                     if (File.Exists( Paths.AppDB ))
                     {
-                        MiigrateDB.MigrateChk();
                         dbOK = await DBC.CheckDB();
                         _logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
                         if (!dbOK) callMsgBx( noDataDir: false, noDB: false, noLog: false, caught: false );
+                        else if (DBC.KVP_GetValu<bool>( KVP_Keys.FirstRun ))
+                        {
+                            bool migrated = MiigrateDB.MigrateChk();
+                            if (migrated) 
+                            {
+                                _cmb.I_migrated = true;
+                            }
+                            SeedscrpyFQNfromInstall();
+                        }
                     }
                     else callMsgBx( noDataDir: false, noDB: true, noLog: false, caught: false );
 
@@ -324,6 +339,40 @@ namespace FoneCall
                 }
             }
         }
+        public static void SeedscrpyFQNfromInstall()
+        {
+            int rowCount = DBC.OneT_Valu<int>( "SELECT COUNT(*) FROM ExeSpec" );
+            string currentScrcpy = rowCount > 0
+                ? DBC.OneT_Valu<string>( "SELECT ScrcpyFQN FROM ExeSpec LIMIT 1" )
+                : null;
+
+            // Only seed if ExeSpec has no row yet, or its ScrcpyFQN is blank
+            if (!string.IsNullOrWhiteSpace( currentScrcpy ))
+                return;
+
+            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey( @"Software\FoneCall" ))
+            {
+                string detected = key?.GetValue( "DetectedScrcpyFQN" ) as string;
+                if (!string.IsNullOrWhiteSpace( detected ) && File.Exists( detected ))
+                {
+                    if (rowCount == 0)
+                    {
+                        DBC.TypedModelSave<object>(
+                            "INSERT INTO ExeSpec (ScrcpyFQN, Arguments) VALUES (@Path, '')",
+                            new { Path = detected }
+                        );
+                    }
+                    else
+                    {
+                        DBC.TypedModelSave<object>(
+                            "UPDATE ExeSpec SET ScrcpyFQN = @Path",
+                            new { Path = detected }
+                        );
+                    }
+                }
+            }
+        }
+
         private static void LogSizeCheck()
         {
             int appStarts = 0;

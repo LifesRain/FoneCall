@@ -14,7 +14,7 @@ echo ================================================== >> "%LOG_FILE%"
 set "releaseFolder=%~1"
 
 :: Fallback if running manually outside of VS (removes trailing slash if present)
-if "%releaseFolder%"=="" set "releaseFolder=F:\FoneCall_15_OCT\FoneCall\bin\Release"
+if "%releaseFolder%"=="" set "releaseFolder=F:\FoneCall_15_OCT\FoneCall\bin\Release\Installer"
 if "%releaseFolder:~-1%"=="\" set "releaseFolder=%releaseFolder:~0,-1%"
 echo Release folder target is: %releaseFolder% >> "%LOG_FILE%"
 

@@ -41,6 +41,7 @@
             this.CloseWinPB = new System.Windows.Forms.PictureBox();
             this.MinWinPB = new System.Windows.Forms.PictureBox();
             this.MoveWinPB = new System.Windows.Forms.PictureBox();
+            this.MigrateLBL = new System.Windows.Forms.Label();
             this.WinCtrlPNL.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CloseWinPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinWinPB)).BeginInit();
@@ -195,12 +196,26 @@
             this.MoveWinPB.TabIndex = 1199;
             this.MoveWinPB.TabStop = false;
             // 
+            // MigrateLBL
+            // 
+            this.MigrateLBL.AutoSize = true;
+            this.MigrateLBL.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.MigrateLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MigrateLBL.ForeColor = System.Drawing.Color.Black;
+            this.MigrateLBL.Location = new System.Drawing.Point(14, 14);
+            this.MigrateLBL.MaximumSize = new System.Drawing.Size(328, 0);
+            this.MigrateLBL.Name = "MigrateLBL";
+            this.MigrateLBL.Size = new System.Drawing.Size(172, 24);
+            this.MigrateLBL.TabIndex = 1212;
+            this.MigrateLBL.Text = "The FoneCall DB has been upgraded.\r\nYour usser settings are not changed.";
+            // 
             // DataEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(87)))), ((int)(((byte)(79)))));
             this.ClientSize = new System.Drawing.Size(359, 231);
+            this.Controls.Add(this.MigrateLBL);
             this.Controls.Add(this.WinCtrlPNL);
             this.Controls.Add(this.VERIFIED_LBL);
             this.Controls.Add(this.UpdateArgsLINK);
@@ -237,5 +252,6 @@
         private System.Windows.Forms.PictureBox CloseWinPB;
         private System.Windows.Forms.PictureBox MinWinPB;
         private System.Windows.Forms.PictureBox MoveWinPB;
+        private System.Windows.Forms.Label MigrateLBL;
     }
 }
