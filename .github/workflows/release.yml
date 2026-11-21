@@ -72,13 +72,9 @@ jobs:
 
         # Option 3: Standalone Portable Folder (already includes Licenses, FoneCall.db, and FoneCall.log)
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option3/" -Recurse
-        Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
-        Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option3/" -ErrorAction SilentlyContinue
 
         # Option 4: Portable Folder + .NET 4.8.1 Web Runtime
         Copy-Item -Path "FoneCall/bin/Release/Portable/*" -Destination "dist/Option4/" -Recurse
-        Copy-Item -Path "INNO/fonecall.db" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
-        Copy-Item -Path "INNO/fonecall.log" -Destination "dist/Option4/" -ErrorAction SilentlyContinue
         Copy-Item "INNO/ndp481-webinstaller.exe" -Destination "dist/Option4/"
 
         Compress-Archive -Path "dist/Option1/*" -DestinationPath "INNO/Output/1-FoneCall_Setup.zip" -Force
@@ -95,8 +91,8 @@ jobs:
         name: fonecall-test-packages
         path: INNO/Output/*.zip
 
-    # Only publishes a GitHub Pre-release when triggered by an actual v* tag push
-    - name: Publish All 4 Formats to GitHub Pre-release
+    # Only publishes a GitHub Release when triggered by an actual v* tag push
+    - name: Publish All 4 Formats to GitHub Release (Draft)
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v3
       with:
