@@ -108,10 +108,8 @@ namespace FoneCall
         public const string Splitter2 = "||||||";
         public const string ErrChks = "Please check the following:\n" +
                 "- Ensure that the scrcpy executable exists at the specified path.\n" +
-                "- Ensure that all requested Arguments are valid.\n" +
                 "- Verify that you have the necessary permissions to execute the file.\n" +
                 "- Check if any antivirus or security software is blocking the execution.\n\n" +
-                "- Ensure your phone is accessible le via Windows File Explorer\n" +
                 "If the issue persists after checking the above\nFoneCall may need to be reinstalled.";
 
         public static List<ICaller> OpenWins { get; set; }

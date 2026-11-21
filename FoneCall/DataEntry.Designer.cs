@@ -208,6 +208,7 @@
             this.MigrateLBL.Size = new System.Drawing.Size(172, 24);
             this.MigrateLBL.TabIndex = 1212;
             this.MigrateLBL.Text = "The FoneCall DB has been upgraded.\r\nYour usser settings are not changed.";
+            this.MigrateLBL.Visible = false;
             // 
             // DataEntry
             // 

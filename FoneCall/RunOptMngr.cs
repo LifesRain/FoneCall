@@ -86,8 +86,9 @@ namespace FoneCall
             TextPNL.Location = new Point( (ClientSize.Width - TextPNL.Width) / 2, TextPNL.Top );
             DGV_PNL.Location = new Point( DGV_PNL.Left, TextPNL.Bottom + 10 );
 
+            // actualy I forgot to include this in the code provided above and follows setting ClientSize - shouldn't it have centered the window on the screen?
             Screen scr = Screen.FromControl( this );
-            Location = new Point( Left, (scr.WorkingArea.Height - ClientSize.Height) / 2 );
+            Location = new Point( (scr.WorkingArea.Width - ClientSize.Width ) / 2 , (scr.WorkingArea.Height - ClientSize.Height) / 2 );
         }
 
         private void PopulateDGVs()

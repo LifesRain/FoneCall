@@ -196,6 +196,10 @@ begin
 
   if CurPageID = ScrcpyPage.ID then
   begin
+  // RemoveQuotes strips surrounding double-quotes if the user used Explorer's "Copy as path"
+    ChosenFile := Trim(RemoveQuotes(Trim(ScrcpyPage.Values[0])));
+    ScrcpyPage.Values[0] := ChosenFile;
+    
     ChosenFile := Trim(ScrcpyPage.Values[0]);
     if ChosenFile <> '' then
     begin

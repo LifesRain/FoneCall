@@ -64,6 +64,8 @@ namespace FoneCall
             // only true if not started from ApplicationContext & if from Context ExeSpec is null
             if (_caller.I_form != null)
             {
+                DBC.UpdateKVP( KVP_Keys.FirstRun, "false" );
+
                 _caller.I_form.Close();
                 var spec = DBC.GetExeSpec();
                 if (spec != null)
@@ -274,11 +276,7 @@ namespace FoneCall
 
             DBC.SaveExeSpec( t );
 
-            if (DBC.GetExeSpec() != null)
-            {
-                DBC.UpdateKVP( KVP_Keys.FirstRun, "false" );
-                WinCtrl.Call_RunSCRCPY( this, noDelay: true );
-            }
+            if (DBC.GetExeSpec() != null) WinCtrl.Call_RunSCRCPY( this, noDelay: true );
             else
             {
                 #region msgBox Params

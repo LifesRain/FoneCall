@@ -8,6 +8,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace FoneCall
     {
         #region Declare Fiels
         private static int _elapsed { get; set; } = 0;
-        private static bool _hasUIerror { get; set; } = false;
+        private static bool _hasAppErr { get; set; } = false;
         private static bool _hasProcErr { get; set; } = false;
         private static bool _nuProgMsg { get; set; } = false;
         private static bool _delayTimerRunning { get; set; } = false;
@@ -211,21 +212,25 @@ namespace FoneCall
             else
             {
                 #region MSG
-                string errType = _hasUIerror ? "FoneCall" : _hasProcErr ? "scrcpy execution" : "scrcpy display.",
-                       intro = _hasUIerror ? _uiErrorMsg : _hasProcErr ? _initMsg : "scrcpy failed to display.",
-                       instruct = _hasUIerror ? "This issue may be transitory or FoneCall may be corrupted."
-                                                : Xfer.ErrChks,
-                       btn1 = _hasUIerror ? "Retry" : "Fix",
-                       opt1 = _hasUIerror ? "running scrcpy" : "the problem in Data Entry",
+                List<string> peMsg = new List<string>();
+                if (_hasProcErr) peMsg = proErrMsg().Split( '|' ).ToList();
+
+                string errType = _hasAppErr ? "FoneCall" : _hasProcErr ? "scrcpy execution" : "scrcpy display.",
+                       intro = _hasAppErr ? _uiErrorMsg : _hasProcErr ? peMsg[0] : "scrcpy failed to display.",
+                       instruct = _hasAppErr ? "This issue may be transitory or FoneCall may be corrupted."
+                                                : _hasProcErr ? peMsg[1] : "",
+                       btn1 = _hasAppErr ? "Retry" : "Fix",
+                       opt1 = _hasAppErr ? "running scrcpy" : "the problem in Data Entry",
                        msg = $"{errType} error: {intro}" +
-                            $"{Xfer.Splitter2}{instruct}\n\n" +
+                            $"{Xfer.Splitter2}" +
+                            $"{instruct}\n\n" +
                             $"The FoneCall database and log are located in\n{Paths.AppData}\n\n" +
                             $"You can \"{btn1}\" {opt1} or \"Exit\" FoneCall,";
                 #endregion
                 #region msgBox Params
                 I_form = this;
                 I_MBcaller = Name;
-                I_MsgType = States.Warn;
+                I_MsgType = _hasAppErr ? States.Fail : States.Warn;
                 I_Msg = msg;
                 I_Txt_Btn1 = btn1;
                 I_Txt_Btn2 = "Exit";
@@ -234,8 +239,38 @@ namespace FoneCall
                 if (mbReturn == I_Txt_Btn2) Close();
                 else
                 {
-                    if (_hasUIerror) InitProcRun();
+                    if (_hasAppErr) InitProcRun();
                     else WinCtrl.Call_DataEntry( this );
+                }
+
+                string proErrMsg()
+                {
+                    string lower = _initMsg.ToLowerInvariant();
+
+                    if (lower.Contains( "could not find any adb device" ))
+                        return "No Android device was detected.|" +
+                               "• Ensure your phone is connected with a data-capable USB cable.\n" +
+                               "• Verify that USB Debugging is enabled in Developer Options.";
+
+                    if (lower.Contains( "unauthorized" ) || lower.Contains( "authenticate" ))
+                        return "Your Android device is unauthorized.|" +
+                               "• Unlock your phone screen and tap 'Allow' on the 'Allow USB debugging?' prompt.";
+
+                    if (lower.Contains( "offline" ))
+                        return "Your Android device is reporting as offline.|" +
+                               "• Unplug and reconnect the USB cable, then try again.";
+
+                    if (lower.Contains( "multiple" ) && lower.Contains( "adb devices" ))
+                        return "Multiple Android devices are connected.|" +
+                               "• Add -d (for USB device) or -s <serial> to your scrcpy Arguments.";
+
+                    if (lower.Contains( "unknown option" ) || lower.Contains( "ambiguous option" ) || lower.Contains( "requires an argument" ))
+                        return $"Invalid scrcpy argument:\n{_initMsg}|" +
+                               "• Check your custom Arguments for typos or missing values.";
+
+                    // Fallback: show the exact scrcpy error plus general troubleshooting tips
+                    return $"scrcpy reported an error:\n{_initMsg}|" +
+                           $"{Xfer.ErrChks}";
                 }
             }
         }
@@ -247,7 +282,7 @@ namespace FoneCall
             ExeSpec exeSpec = DBC.GetExeSpec();
             if (exeSpec == null)
             {
-                _hasUIerror = true;
+                _hasAppErr = true;
                 _initMsg = "Cannot find scrcpy.exe FQN\nsaved in the database.";
                 _uiErrorMsg = "scrcpy.exe FQN not found in the database.";
                 return Task.FromResult( scrcpyRunning );
@@ -305,7 +340,7 @@ namespace FoneCall
                 try { p.PriorityClass = ProcessPriorityClass.High; }
                 catch (Exception ex)
                 {
-                    _hasUIerror = true;
+                    _hasAppErr = true;
                     _uiErrorMsg = ex.Message;
                     return Task.FromResult( scrcpyRunning );
                 }
@@ -436,7 +471,7 @@ namespace FoneCall
         }
         private void AbortStart()
         {
-            string cause = _hasUIerror ? "scrcpy execution error" : "scrcpy run prevented by user";
+            string cause = _hasAppErr ? "scrcpy execution error" : "scrcpy run prevented by user";
             DisposeDelayTimer();
             LogR.Norm( $"{cause}, calling Data Entry at {Xfer.RunTime}" );
             WinCtrl.Call_DataEntry( this );
