@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="https://github.com">Overview</a> •
+  <a href="https://github.com/LifesRain/FoneCall">Overview</a> •
   <a href="./InstallGuide.md">Installation Guide</a> •
   <strong>App Walkthrough</strong> •
-  <a href="https://github.com/releases/latest">Latest Releases</a>
+  <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
 </p>
 
 ---

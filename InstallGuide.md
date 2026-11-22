@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="https://github.com">Overview</a> •
+  <a href="https://github.com/LifesRain/FoneCall">Overview</a> •
   <strong>Installation Guide</strong> •
   <a href="./FoneCallWalkthru.md">App Walkthrough</a> •
-  <a href="https://github.com/releases/latest">Latest Releases</a>
+  <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
 </p>
 
 ---
@@ -50,10 +50,13 @@ For details on our security architecture, see our [Security Policy](SECURITY.md)
 
 |Download File Name|.zip File Contents|
 |----|----|
-| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] which includes a "get scrcpy" option.|
-| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables.|
-| [3-FoneCall_Portable.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/3-FoneCall_Portable.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
-| [4-FoneCall_Portable_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-FoneCall_Portable_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable.|
+
+| Download File Name | .zip File Contents |
+| :--- | :--- |
+| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/latest/download/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] which includes a "get scrcpy" option. |
+| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/latest/download/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables. |
+| [3-FoneCall_Portable.zip](https://github.com/LifesRain/FoneCall/releases/latest/download/3-FoneCall_Portable.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
+| [4-FoneCall_Portable_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/latest/download/4-FoneCall_Portable_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable. |
 
 
 [^1]: Setup creates the Registry entries required to  

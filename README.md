@@ -2,7 +2,7 @@
   <strong>Overview</strong> •
   <a href="./InstallGuide.md">Installation Guide</a> •
   <a href="./FoneCallWalkthru.md">App Walkthrough</a> •
-  <a href="https://github.com">Latest Releases</a>
+  <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
 </p>
 
 ---
