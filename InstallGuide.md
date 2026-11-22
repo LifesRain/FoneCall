@@ -12,38 +12,46 @@ FoneCall features a fully transparent development process with a public codebase
 
     Using third-party tools like 7-Zip or WinRAR typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
-For details on our security architecture, see our [Security Policy](SECURITY.md).
-
 #### If you still see the Windows SmartScreen warning
-
 <details>
-<summary>Click here for visual instructions on bypassing the SmartScreen warning</summary>
+<summary>Click here for SmartScreen navigation instructions/summary>
 <br>
 
 ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
 
 </details>
 
+
 #### scrcpy and ADB.exe
-If executing scrcpy via FoneCall will be the first time scrcpy is run on your computer Windows Firewall may ask permission for adb.exe (Android Debug Bridge, bundled with scrcpy) to communicate—users can leave Private networks checked and click Allow access (or even click Cancel if they only ever use USB, as adb over USB works over 127.0.0.1 loopback even if inbound LAN access is blocked).
+
+<details>
+<summary>Click here for ADB.exe and Windows Firewall explanation/summary>
+<br>
+
+scrcpy.exe uses ADP (Android Debug Bridge) to communicate with your phone. If executing scrcpy via FoneCall will be the first time scrcpy is run on your computer Windows Firewall may ask permission to let adb.exe through the firewall. You can leave Private networks checked and click Allow access.
+
+</details>
+
 
 > [!IMPORTANT]
 > **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip. Right-click the downloaded `.zip` file and select `7-Zip > Extract` or `WinRAR > Extract` to avoid the SmartScreen warning.
 
+For details on our security architecture, see our [Security Policy](SECURITY.md).
+
 
 |Download File Name|.zip File Contents|
 |----|----|
-| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^2] |
-| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^3] executables |
+| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^1] which includes a "get scrcpy" option.|
+| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables.|
 | [3-FoneCall_Portable.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/3-FoneCall_Portable.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
-| [4-FoneCall_Portable_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-FoneCall_Portable_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^3] executable |
+| [4-FoneCall_Portable_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-FoneCall_Portable_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable.|
 
 
-[^2]: Setup creates the Registry entries required to  
+[^1]: Setup creates the Registry entries required to  
 (1) add FoneCall to the Start Menu and register it with Windows Apps & features for easy uninstallation  
 (2) save scrcpy location via Computer\HKEY_CURRENT_USER\SOFTWARE\FoneCall  
 No other modifications to the Registry are made.  
-[^3]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
+[^2]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
 
 #### Download Integrity Verification
 Both "scripted" and manual verification are performed using `PowerShell` on your computer. The script automatically retrieves the GitHub generated checksum key and compares it to the key associated with the downloaded file.
