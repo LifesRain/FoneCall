@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="./https://github.com/LifesRain/FoneCall">Home</a> •
+  <a href="./InstallGuide.md">Installation Guide</a> •
+  <a href="./SECURITY.md">Security</a> •
+  <a href="https://github.com">Latest Releases</a> •
+  <a href="https://github.com">GitHub Repo</a>
+</p>
+
+---
 ## FoneCall Walkthrough
 
 The tool is minimalist with two small-footprint core windows and two subsidiary windows. The windows are:
@@ -30,4 +39,4 @@ The Options Reference and Update window displays native scrcpy Help outputs and 
 ![Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.](/assets/images/ArgRef.png)
 
 ---
-Return to the FoneCall [README](README.md) for more information on the tool, its features, and installation instructions.
+Return to the FoneCall **[Repository Home](https://github.com/LifesRain/FoneCall)** for more information on the tool or proceed to the **[Installation Guide](InstallGuide.md)** for  installation instructions.

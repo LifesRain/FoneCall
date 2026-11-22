@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="./https://github.com/LifesRain/FoneCall">Home</a> •
+  <a href="./InstallGuide.md">Installation Guide</a> •
+  <a href="./SECURITY.md">Security</a> •
+  <a href="https://github.com">Latest Releases</a> •
+  <a href="https://github.com">GitHub Repo</a>
+</p>
+
+---
 ## Installation Guide & Caveats
 #### Why is it not distributed as a standalone "Setup.exe"?
 Browsers, email clients and antivirus scanners frequently block direct downloads of .exe installers or flag them with aggressive SmartScreen warnings. Packaging the installer inside a `.ZIP archive` ensures you can download it successfully.
@@ -13,24 +22,25 @@ FoneCall features a fully transparent development process with a public codebase
     Using third-party tools like 7-Zip or WinRAR typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
 #### If you still see the Windows SmartScreen warning
+
 <details>
-<summary>Click here for SmartScreen navigation instructions/summary>
+<summary>Click here for SmartScreen navigation instructions</summary>
 <br>
 
 ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
 
 </details>
 
-
 #### scrcpy and ADB.exe
 
 <details>
-<summary>Click here for ADB.exe and Windows Firewall explanation/summary>
+<summary>Click here for ADB.exe and Windows Firewall explanation</summary>
 <br>
 
-scrcpy.exe uses ADP (Android Debug Bridge) to communicate with your phone. If executing scrcpy via FoneCall will be the first time scrcpy is run on your computer Windows Firewall may ask permission to let adb.exe through the firewall. You can leave Private networks checked and click Allow access.
+`scrcpy.exe` uses ADB (Android Debug Bridge) to communicate with your phone. If executing scrcpy via FoneCall is the first time scrcpy is run on your computer, Windows Firewall may ask permission to let `adb.exe` through the firewall. You can leave **Private networks** checked and click **Allow access**.
 
 </details>
+
 
 
 > [!IMPORTANT]
@@ -76,5 +86,4 @@ Get-FileHash .\*FoneCall*.zip -Algorithm SHA256 | Select-Object @{Name="File";Ex
 ```
 ---
 
-
-Return to the FoneCall [README](README.md) for more information on the tool or proceed to our repository's **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
+Return to the FoneCall **[Repository Home](https://github.com/LifesRain/FoneCall)** for more information on the tool or proceed to our repository's **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
