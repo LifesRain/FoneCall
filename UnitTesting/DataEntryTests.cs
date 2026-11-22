@@ -35,7 +35,6 @@ namespace UnitTesting
             public string I_LinkTxt { get; set; } = string.Empty;
             public string I_LinkLastTxt { get; set; } = string.Empty;
             public string I_LinkURL { get; set; } = string.Empty;
-            public bool I_migrated { get; set; } = false;
         }
 
         // Helper: create DataEntry on STA thread (WinForms requires STA)

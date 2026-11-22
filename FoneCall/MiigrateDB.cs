@@ -19,7 +19,14 @@ namespace FoneCall
 {
     internal class MiigrateDB
     {
-        private const int LatestSchemaVersion = 1;
+		// IMPORTANT MAINTENANCE NOTE: migration is currently a manual process. If you add new or alter
+		// existing  tables you must [1] update the migration logic here to ensure that existing users'
+		// databases are properly updated to the latest schema version. [2] Sett the version value
+		// via Pragma user_version to the latest version number using a DB manager. [3] Update the
+		// LatestSchemaVersion constant below to match the new version number.  This capability must be
+		// tested before releasing a new version of FoneCall to ensure that existing users' databases
+		// are properly migrated to the latest schema version while retaining user settings. 
+		private const int LatestSchemaVersion = 2;
 
         public static bool MigrateChk()
         {
@@ -45,11 +52,10 @@ namespace FoneCall
                 {
                     try
                     {
-                        if (currentVersion < 1)
+                        if (currentVersion < LatestSchemaVersion)
                         {
                             ApplyVersion1( connection, transaction );
                             connection.Execute( "PRAGMA user_version = 1;", transaction: transaction );
-                            LogR.Norm( $"Database migrated to version 1." );
                             migrated = true;
                         }
 

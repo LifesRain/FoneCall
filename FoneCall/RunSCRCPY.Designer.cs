@@ -170,7 +170,7 @@
             this.MigrateLBL.BackColor = System.Drawing.Color.WhiteSmoke;
             this.MigrateLBL.Font = new System.Drawing.Font("Segoe UI Semibold", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MigrateLBL.ForeColor = System.Drawing.Color.Black;
-            this.MigrateLBL.Location = new System.Drawing.Point(36, 63);
+            this.MigrateLBL.Location = new System.Drawing.Point(133, 138);
             this.MigrateLBL.MaximumSize = new System.Drawing.Size(328, 0);
             this.MigrateLBL.Name = "MigrateLBL";
             this.MigrateLBL.Size = new System.Drawing.Size(172, 24);

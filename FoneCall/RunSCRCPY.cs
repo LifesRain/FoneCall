@@ -53,9 +53,15 @@ namespace FoneCall
             VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
             WinCtrl.RegisterWin( this );
 
-            if (_caller.I_migrated) MigrateLBL.Visible = true;
+            if (Xfer.DBmigrated)
+			{
+				MigrateLBL.Location = new Point( 36, 63 );
+				MigrateLBL.Visible = true;
+			}
 
-            InitEventHandlers();
+			Xfer.DBmigrated = false;
+
+			InitEventHandlers();
             AdjustForm();
         }
         protected override void OnShown( EventArgs e )

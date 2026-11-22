@@ -89,6 +89,7 @@ namespace FoneCall
     {
         public const string FirstRun = "FirstRun";
         public const string Intro = "Intro";
+        public const string scrcpyRun = "scrcpyRun";
         public const string Version = "Version";
     }
     public static class TBL
@@ -115,7 +116,8 @@ namespace FoneCall
         public static List<ICaller> OpenWins { get; set; }
         public static string RunDate { get; } = DateTime.Now.ToString( "yyyy MMM dd HH:mm" );
         public static string RunTime { get; } = DateTime.Now.ToString( "HH:mm" );
-    }
+		public static bool DBmigrated { get; set; } = false;
+	}
     public static class DBC
     {
         // Allows tests to explicitly redirect DB operations

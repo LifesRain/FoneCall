@@ -50,9 +50,17 @@ namespace FoneCall
             WinCtrl.RegisterWin( this );
             VerLBL.Text = $"scrcpy {DBC.KVP_GetValu<string>( KVP_Keys.Version )}";
 
-            if (_caller.I_migrated) MigrateLBL.Visible = true;
+            if (Xfer.DBmigrated) MigrateLBL.Visible = true;
+			Xfer.DBmigrated = false;
 
-            AdjustForm();
+			if (!DBC.KVP_GetValu<bool>( KVP_Keys.scrcpyRun ))
+			{
+				ADBallowLBL.Visible = true;
+				DBC.UpdateKVP( KVP_Keys.scrcpyRun, "true" );
+			}
+			else ADBallowLBL.Visible = false;
+
+			AdjustForm();
             InitEventHandlers();
 
             _loading = false;
@@ -318,5 +326,5 @@ namespace FoneCall
             WinCtrl.SaveWinPos( this );
             WinCtrl.UnregisterWin( this );
         }
-    }
+	}
 }

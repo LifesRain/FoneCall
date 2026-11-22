@@ -260,7 +260,9 @@ namespace FoneCall
                             bool migrated = MiigrateDB.MigrateChk();
                             if (migrated) 
                             {
-                                _cmb.I_migrated = true;
+								_logMsgs.AppendLine( $"DB integrity OK = {dbOK}" );
+								LogR.Norm( $"Database migrated to version 1." );
+								Xfer.DBmigrated = true;
                             }
                             SeedscrpyFQNfromInstall();
                         }

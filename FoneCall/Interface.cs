@@ -22,7 +22,6 @@ namespace FoneCall
         string I_LinkTxt { get; set; }
         string I_LinkLastTxt { get; set; }
         string I_LinkURL { get; set; }
-        bool I_migrated { get; set; }
     }
     public class MsgBoxImplement : Form, ICaller
     {
@@ -37,6 +36,5 @@ namespace FoneCall
         public string I_LinkTxt { get; set; }
         public string I_LinkLastTxt { get; set; }
         public string I_LinkURL { get; set; }
-        public bool I_migrated { get; set; } = false;
     }
 }

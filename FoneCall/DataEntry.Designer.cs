@@ -42,6 +42,7 @@
             this.MinWinPB = new System.Windows.Forms.PictureBox();
             this.MoveWinPB = new System.Windows.Forms.PictureBox();
             this.MigrateLBL = new System.Windows.Forms.Label();
+            this.ADBallowLBL = new System.Windows.Forms.Label();
             this.WinCtrlPNL.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CloseWinPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinWinPB)).BeginInit();
@@ -210,12 +211,29 @@
             this.MigrateLBL.Text = "The FoneCall DB has been upgraded.\r\nYour usser settings are not changed.";
             this.MigrateLBL.Visible = false;
             // 
+            // ADBallowLBL
+            // 
+            this.ADBallowLBL.AutoSize = true;
+            this.ADBallowLBL.BackColor = System.Drawing.Color.Bisque;
+            this.ADBallowLBL.Font = new System.Drawing.Font("Segoe UI", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ADBallowLBL.ForeColor = System.Drawing.Color.Black;
+            this.ADBallowLBL.Location = new System.Drawing.Point(15, 167);
+            this.ADBallowLBL.MaximumSize = new System.Drawing.Size(328, 0);
+            this.ADBallowLBL.Name = "ADBallowLBL";
+            this.ADBallowLBL.Size = new System.Drawing.Size(328, 26);
+            this.ADBallowLBL.TabIndex = 1213;
+            this.ADBallowLBL.Text = "If this is the first scrcpy run and Windows Firewall prompts for\r\nadb.exe, click " +
+    "Allow";
+            this.ADBallowLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ADBallowLBL.Visible = false;
+            // 
             // DataEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(87)))), ((int)(((byte)(79)))));
             this.ClientSize = new System.Drawing.Size(359, 231);
+            this.Controls.Add(this.ADBallowLBL);
             this.Controls.Add(this.MigrateLBL);
             this.Controls.Add(this.WinCtrlPNL);
             this.Controls.Add(this.VERIFIED_LBL);
@@ -254,5 +272,6 @@
         private System.Windows.Forms.PictureBox MinWinPB;
         private System.Windows.Forms.PictureBox MoveWinPB;
         private System.Windows.Forms.Label MigrateLBL;
-    }
+		private System.Windows.Forms.Label ADBallowLBL;
+	}
 }

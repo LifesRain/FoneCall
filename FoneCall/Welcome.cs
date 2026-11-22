@@ -41,9 +41,10 @@ namespace FoneCall
             I_form = this;
             WinCtrl.RegisterWin( this );
 
-            if (_caller.I_migrated) MigrateLBL.Visible = true;
+            if (Xfer.DBmigrated) MigrateLBL.Visible = true;
+			Xfer.DBmigrated = false;
 
-            InitEventHandlers();
+			InitEventHandlers();
         }///
         protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
         {

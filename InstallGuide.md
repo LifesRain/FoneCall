@@ -1,38 +1,43 @@
-ï»¿## Installation Guide & Caveats
+## Installation Guide & Caveats
 #### Why is it not distributed as a standalone "Setup.exe"?
 Browsers, email clients and antivirus scanners frequently block direct downloads of .exe installers or flag them with aggressive SmartScreen warnings. Packaging the installer inside a `.ZIP archive` ensures you can download it successfully.
 #### SmartScreen Considerations
 FoneCall features a fully transparent development process with a public codebase repository. To keep the project free, it is distributed without an expensive commercial code-signing certificate. Because of this, Windows Defender SmartScreen will display a standard "Windows protected your PC" warning when you launch the installer. While this warning is a helpful security feature for truly unknown files, it is a false alarm here since the source is trusted.
 
-*   ***The Root Cause:*** Windows SmartScreen makes no distinction between truly well known sourcesâ€”such as GitHubâ€”and other sources. 
+*   ***The Root Cause:*** Windows SmartScreen makes no distinction between truly well known sources—such as GitHub—and other sources. 
 
-    When you use the default Windows File Explorer to extract a downloaded ZIP file, Windows automatically propagates an internet tracking tagâ€”called *Mark of the Web* (MotW)â€”to every single file extracted from the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
+    When you use the default Windows File Explorer to extract a downloaded ZIP file, Windows automatically propagates an internet tracking tag—called *Mark of the Web* (MotW)—to every single file extracted from the zip file. This often causes Windows Defender or SmartScreen to block the installer from launching or corrupts the extraction process.
 
   * ***The Solution:*** To avoid the unnecessary warning use `7-Zip`,  `.WinRAR` or any other unzipping tool to extract the FoneCall installer. (`7-Zip` is preferred by the author.)
 
     Using third-party tools like 7-Zip or WinRAR typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
-
 For details on our security architecture, see our [Security Policy](SECURITY.md).
 
-> [!IMPORTANT]
-> **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip.
-
 #### If you still see the Windows SmartScreen warning,
-...see footnotes[^3] ...
-[^3]: ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
+...see footnotes[^1] ...
+[^1]: ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
+
+#### scrcpy and ADB.exe
+If executing scrcpy via FoneCall will be the first time scrcpy is run on your computer Windows Firewall may ask permission for adb.exe (Android Debug Bridge, bundled with scrcpy) to communicate—users can leave Private networks checked and click Allow access (or even click Cancel if they only ever use USB, as adb over USB works over 127.0.0.1 loopback even if inbound LAN access is blocked).
+
+> [!IMPORTANT]
+> **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip. Right-click the downloaded `.zip` file and select `7-Zip > Extract` or `WinRAR > Extract` to avoid the SmartScreen warning.
 
 
 |Download File Name|.zip File Contents|
 |----|----|
-| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` â€” the installer executable[^1] |
-| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^2] executables |
-| [3-Portable_Fonecall.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/3-Portable_Fonecall.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
-| [4-Portable_Fonecall_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-Portable_Fonecall_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^2] executable |
+| [1-FoneCall_Setup.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/1-FoneCall_Setup.zip) | `FoneCall_Setup` — the installer executable[^2] |
+| [2-FoneCall_Setup_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/2-FoneCall_Setup_and_NDP481-Web.zip) | `FoneCall_Setup` and `NDP481-Web`[^3] executables |
+| [3-FoneCall_Portable.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/3-FoneCall_Portable.zip) | FoneCall binaries containing `FoneCall_Portable.exe` and the required supporting files. Unzip while retaining the folder structure. |
+| [4-FoneCall_Portable_and_NDP481-Web.zip](https://github.com/LifesRain/FoneCall/releases/download/v1.0.0-rc.2/4-FoneCall_Portable_and_NDP481-Web.zip) | FoneCall binaries and the `NDP481-Web`[^3] executable |
 
 
-[^1]: Setup creates the Registry entries required to add FoneCall to the Start Menu and register it with Windows Apps & features for easy uninstallation. No other modifications to the Registry are made.
-[^2]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
+[^2]: Setup creates the Registry entries required to  
+(1) add FoneCall to the Start Menu and register it with Windows Apps & features for easy uninstallation  
+(2) save scrcpy location via Computer\HKEY_CURRENT_USER\SOFTWARE\FoneCall  
+No other modifications to the Registry are made.  
+[^3]: NDP481-Web is Microsoft's official .Net Framework 4.8 runtime installer 
 
 #### Download Integrity Verification
 Both "scripted" and manual verification are performed using `PowerShell` on your computer. The script automatically retrieves the GitHub generated checksum key and compares it to the key associated with the downloaded file.
@@ -45,7 +50,7 @@ In both cases open PowerShell and change directory (cd ) to the folder where you
 
 ***`Requires internet connection`***
 ```powershell
-$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-Portable_Fonecall.zip','4-Portable_Fonecall_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.2").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
+$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-FoneCall_Portable.zip','4-FoneCall_Portable_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.2").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
 ```
 
 ##### Manual Command for Verification
