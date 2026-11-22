@@ -14,9 +14,15 @@ FoneCall features a fully transparent development process with a public codebase
 
 For details on our security architecture, see our [Security Policy](SECURITY.md).
 
-#### If you still see the Windows SmartScreen warning,
-...see footnotes[^1] ...
-[^1]: ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
+#### If you still see the Windows SmartScreen warning
+
+<details>
+<summary>Click here for visual instructions on bypassing the SmartScreen warning</summary>
+<br>
+
+![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
+
+</details>
 
 #### scrcpy and ADB.exe
 If executing scrcpy via FoneCall will be the first time scrcpy is run on your computer Windows Firewall may ask permission for adb.exe (Android Debug Bridge, bundled with scrcpy) to communicate—users can leave Private networks checked and click Allow access (or even click Cancel if they only ever use USB, as adb over USB works over 127.0.0.1 loopback even if inbound LAN access is blocked).
