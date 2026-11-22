@@ -1,3 +1,11 @@
+<p align="center">
+  <strong>Overview</strong> •
+  <a href="./InstallGuide.md">Installation Guide</a> •
+  <a href="./FoneCallWalkthru.md">App Walkthrough</a> •
+  <a href="https://github.com">Latest Releases</a>
+</p>
+
+---
 # FoneCall — Windows GUI for scrcpy (Android Screen Mirroring)
 
 FoneCall is a simple, lightweight **scrcpy UI**. It is a standard native Windows desktop application. Functionally it provides an alternative to the `.vbs` script file distributed with scrcpy.

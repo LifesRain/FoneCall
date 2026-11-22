@@ -1,9 +1,8 @@
 <p align="center">
-  <a href="./https://github.com/LifesRain/FoneCall">Home</a> •
+  <a href="https://github.com">Overview</a> •
   <a href="./InstallGuide.md">Installation Guide</a> •
-  <a href="./SECURITY.md">Security</a> •
-  <a href="https://github.com">Latest Releases</a> •
-  <a href="https://github.com">GitHub Repo</a>
+  <strong>App Walkthrough</strong> •
+  <a href="https://github.com/releases/latest">Latest Releases</a>
 </p>
 
 ---
