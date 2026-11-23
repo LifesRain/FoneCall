@@ -20,17 +20,17 @@ FoneCall features a fully transparent development process with a public codebase
 
     Using third-party tools like 7-Zip or WinRAR typically extracts the files without forcefully tagging the installer with the MotW, allowing the setup to run smoothly.
 
-#### If you still see the Windows SmartScreen warning
+#### **If you still see the Windows SmartScreen warning**
 
 <details>
-<summary>Click here for SmartScreen navigation instructions</summary>
+<summary>**Click here for SmartScreen navigation instructions**</summary>
 <br>
 
 ![Instructions for Negotiating SmartScreen.](/assets/images/SmartScreenInstruct.png)
 
 </details>
 
-#### scrcpy and ADB.exe
+#### **scrcpy and ADB.exe**
 
 <details>
 <summary>Click here for ADB.exe and Windows Firewall explanation</summary>
@@ -41,15 +41,30 @@ FoneCall features a fully transparent development process with a public codebase
 </details>
 
 
-
 > [!IMPORTANT]
-> **TLDR:** Use `7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip. Right-click the downloaded `.zip` file and select `7-Zip > Extract` or `WinRAR > Extract` to avoid the SmartScreen warning.
+> **TLDR:** To avoid the SmartScreen warning Use *`7-Zip`,  `.WinRAR` or other archiving utility to extract the FoneCall installer. ***Do not use*** Windows built-in unzip. Right-click the downloaded `.zip` file and select `7-Zip > Extract` or `WinRAR > Extract`.  
+*if downing the installer:* run the extracted `FoneCall_Setup.exe` to install FoneCall.   
+*if downlloading the portable version:* extract the FoneCall folder to the download location, cut the folder and paste it your preferred location.
 
 For details on our security architecture, see our [Security Policy](SECURITY.md).
 
+#### **Download Package Considerations**
 
-|Download File Name|.zip File Contents|
-|----|----|
+<details>
+<summary>Click here for installer and portable comparison</summary>
+<br>
+
+|Feature|Standard Installer (Setup)|Portable Version (Folder)|
+|----|----|----|
+|Best For|Everyday users who want a traditional Windows app experience.|Users who want to run from USB drives, or keeping the system registry untouched.|
+|Start Menu & Uninstall|Adds Start Menu shortcuts and registers in Windows Apps & features.|None. Run directly from the extracted folder; delete the folder to remove.|
+|Windows Registry|Saves the scrcpy path under HKCU\SOFTWARE\FoneCall.|No Registry modifications. Settings are stored locally in the app folder.|
+|scrcpy Setup|Includes a built-in "Get scrcpy" option during setup.|Requires manual placement or linking of scrcpy if not already on your system.|
+
+</details>
+
+#### **Download Packages**
+All releases are packaged in .zip archives so browsers and antivirus tools do not block direct .exe downloads.
 
 | Download File Name | .zip File Contents |
 | :--- | :--- |
@@ -72,16 +87,15 @@ For the manual approach first copy the **sha256** badge listed next to the file 
 
 In both cases open PowerShell and change directory (cd ) to the folder where you saved your downloaded `.zip` file(s).  Then run the appropriate command as described below.
 
-##### Automated "One-Liner" Script
-
-***`Requires internet connection`***
+#### Automated "One-Liner" Script (Requires Internet)
+*Automatically checks your local .zip file against the latest GitHub release SHA-256 digest:*
 ```powershell
-$files = Get-ChildItem -File | Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-FoneCall_Portable.zip','4-FoneCall_Portable_and_NDP481-Web.zip'; if (-not $files) { Write-Host "ERROR: No FoneCall .zip package found in this folder." -ForegroundColor Red } else { $assets = (Invoke-RestMethod "https://api.github.com/repos/LifesRain/FoneCall/releases/tags/v1.0.0-rc.2").assets; foreach ($f in $files.Name) { $a = $assets | Where-Object name -eq $f; if (-not $a.digest) { Write-Host "ERROR: Release or SHA-256 digest not found for $f." -ForegroundColor Red } elseif ((Get-FileHash $f -Algorithm SHA256).Hash -eq ($a.digest -replace '^sha256:','')) { Write-Host "VERIFIED: $f matches official GitHub release." -ForegroundColor Green } else { Write-Host "WARNING: Checksum mismatch for $f!" -ForegroundColor Red } } }
+$files=Get-ChildItem -File|Where-Object Name -in '1-FoneCall_Setup.zip','2-FoneCall_Setup_and_NDP481-Web.zip','3-FoneCall_Portable.zip','4-FoneCall_Portable_and_NDP481-Web.zip';if(-not $files){Write-Host 'ERROR: No FoneCall .zip package found in this folder.' -ForegroundColor Red}else{$release=Invoke-RestMethod -Uri 'https://api.github.com/repos/LifesRain/FoneCall/releases/latest' -Headers @{'User-Agent'='FoneCall-checksum'};Write-Host "Checking release $($release.tag_name)...";$assets=$release.assets;foreach($f in $files){$a=$assets|Where-Object name -eq $f.Name;if(-not $a){Write-Host "ERROR: Asset not found in release: $($f.Name)" -ForegroundColor Red}elseif([string]::IsNullOrWhiteSpace($a.digest)){Write-Host "ERROR: SHA-256 digest not found for $($f.Name)." -ForegroundColor Red}elseif((Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash -ieq ($a.digest -replace '^sha256:','')){Write-Host "VERIFIED: $($f.Name) matches published GitHub release." -ForegroundColor Green}else{Write-Host "WARNING: Checksum mismatch for $($f.Name)!" -ForegroundColor Red}}}
 ```
 
-##### Manual Command for Verification
+##### Manual Command for Verification *Offline)*
 
-***`Can be run locally after downloading`***
+*Generates the local SHA-256 hash so you can compare it against the sha256 badge under Assets on the GitHub Releases page:*
 ```powershell
 Get-FileHash .\*FoneCall*.zip -Algorithm SHA256 | Select-Object @{Name="File";Expression={Split-Path $_.Path -Leaf}}, Hash
 
