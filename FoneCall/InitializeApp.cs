@@ -60,7 +60,7 @@ namespace FoneCall
                 #endregion
 
                 LogR.Norm( _logMsgs.ToString() );
-                LogR.Norm( $"{DateTime.UtcNow} AppData path {Paths.AppData}" ); // for testing; not needed in production
+                //LogR.Norm( $"{DateTime.UtcNow} AppData path {Paths.AppData}" ); // for testing; not needed in production
 
                 #region testing code for development; not needed in production
                 /*
