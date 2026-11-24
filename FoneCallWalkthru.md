@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/LifesRain/FoneCall">Overview</a> •
+  <a href="./README.md">Overview</a> •
   <a href="./InstallGuide.md">Installation Guide</a> •
   <strong>App Walkthrough</strong> •
   <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
@@ -38,4 +38,10 @@ The Options Reference and Update window displays native scrcpy Help outputs and 
 ![Options Reference and Update displays scrcpy Help and provides the opportunity to add new scrcpy Options when they are introduced. This is the source for the Arguments validation in Data Entry.](/assets/images/ArgRef.png)
 
 ---
-Return to the FoneCall **[Repository Home](https://github.com/LifesRain/FoneCall)** for more information on the tool or proceed to the **[Installation Guide](InstallGuide.md)** for  installation instructions.
+
+<p align="center">
+  <a href="./README.md">Overview</a> •
+  <a href="./InstallGuide.md">Installation Guide</a> •
+  <strong>App Walkthrough</strong> •
+  <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
+</p>

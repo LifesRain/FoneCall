@@ -44,8 +44,8 @@ FoneCall is a native Windows desktop application built on .NET technology; insta
 > ⚠️ **Installation Notice:** FoneCall will fail to install if your system lacks .NET Framework 4.8 or higher.
 
 ### Dependency Configuration
-**scrcpy Requirement:** Theoretically FoneCall should function with any scrcpy version but it has only been tested with version 4 and later.  If you do not have the official scrcpy package and
-+ use FonCall_Setup the installer supports acquisition of the package
+**scrcpy Requirement:** Theoretically FoneCall should function with any scrcpy version but it has only been tested with version 4 and later.  If you do not have the official scrcpy package and you
++ use FoneCall_Setup the installer supports acquisition of the package
 + use the portable version scrcpy can be downloaded from the [official scrcpy project](https://github.com/Genymobile/scrcpy/releases).
 ---
 
@@ -82,4 +82,13 @@ If you wish to use this application for commercial purposes contact us at:
 
 📧  [fonecall@lifesrain.com](mailto:fonecall@lifesrain.com)
 
+
+---
+
  
+<p align="center">
+  <strong>Overview</strong> •
+  <a href="./InstallGuide.md">Installation Guide</a> •
+  <a href="./FoneCallWalkthru.md">App Walkthrough</a> •
+  <a href="https://github.com/LifesRain/FoneCall/releases/latest">Latest Releases</a>
+</p>
