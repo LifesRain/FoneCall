@@ -33,9 +33,10 @@ The [FoneCall Walkthrough](FoneCallWalkthru.md) shows and describes the tool's i
 ---
 
 ## System Requirements & Prerequisites
+FoneCall is a native Windows desktop application built on .NET technology; installation will fail if your system does not meet the requirements provided below.  As a scrcpy UI wrapper FoneCall will provide little value without access to a fully functional scrcpy package.
 
 ### Native Runtime Environment
-**Framework Requirement:** Requires .NET Framework 4.8 or higher. Many recent Windows builds include this runtime natively[^1]. If your system does not include it, the runtime installer package can be downloaded with the FoneCall_Setup executable or if you prefer you can acquire it directly from Microsoft.
+**Framework Requirement:** Requires .NET Framework **4.8 or higher**. Many recent Windows builds include this runtime natively[^1]. If your system does not include it, the runtime installer package can be downloaded with the FoneCall_Setup executable or if you prefer you can acquire it directly from Microsoft.
 [^1]: 	<ins>**Windows 10:**</ins> Included natively in Version 1903 (May 2019 Update) and all later builds.    
     <ins>**Windows 11:**</ins> Natively included in the initial release (Version 22000) and later.  
     <ins>**Windows Server:**</ins> Natively included in Windows Server 2019 (build 1903+), 2022, and 2025.
@@ -43,14 +44,13 @@ The [FoneCall Walkthrough](FoneCallWalkthru.md) shows and describes the tool's i
 > ⚠️ **Installation Notice:** FoneCall will fail to install if your system lacks .NET Framework 4.8 or higher.
 
 ### Dependency Configuration
-**scrcpy Requirement:** FoneCall functions strictly as a user interface wrapper and only runs as intended if the complete scrcpy package is accessable.  If you do not have the official scrcpy package, it can be downloaded from the [official scrcpy project page](https://github.com/Genymobile/scrcpy/releases).
-
-
-
+**scrcpy Requirement:** Theoretically FoneCall should function with any scrcpy version but it has only been tested with version 4 and later.  If you do not have the official scrcpy package and
++ use FonCall_Setup the installer supports acquisition of the package
++ use the portable version scrcpy can be downloaded from the [official scrcpy project](https://github.com/Genymobile/scrcpy/releases).
 ---
 
 ## Download and Installation
-Installing FoneCall does not require Administrator privileges. The installation package is a standard Windows installer executable. Because FoneCall connects with an individual's smartphone via scrcpy our installer is configured for "User-Mode".
+Because FoneCall connects with an individual's smartphone via scrcpy our installer is configured for "User-Mode" which does not require Administrator privileges.
 
 Whether you've installed numerous applications or this is your first time, we strongly recommend reading the [Installation Guide & Caveats](InstallGuide.md). The guide describes the download options and provides important information about the installation process, including potential issues with Windows SmartScreen and how to avoid them.
 
@@ -58,12 +58,6 @@ Whether you've installed numerous applications or this is your first time, we st
 
 Get the latest installation package directly from  our repository **[Latest Releases Page](https://github.com/LifesRain/FoneCall/releases/latest)**.
 
-
-### 2. Basic Setup Steps
-1. Ensure the System Requirements & Prerequisites are met.
-2. Read the [Installation Guide & Caveats](InstallGuide.md).
-3. Run the FoneCall installer and follow the desktop setup prompts.
-4. Launch FoneCall, configure your preferred arguments, and pin the app to your Taskbar or Start Menu for one-click access.
 
 ### Verify Your Download (Optional but Recommended)
 
